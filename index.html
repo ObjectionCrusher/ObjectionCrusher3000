@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Objection Crusher 3000</title>
+
+  <style>
+    :root {
+      --black: #020202;
+      --blue: #1428ff;
+      --yellow: #ffe92f;
+      --red: #ff2b22;
+      --white: #ffffff;
+      --muted: #9ea4b2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #050505;
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      padding: 20px;
+    }
+
+    .game {
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    .cabinet {
+      position: relative;
+      background: var(--black);
+      border: 5px solid var(--blue);
+      border-radius: 30px;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .cabinet::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.025) 0,
+        rgba(255, 255, 255, 0.025) 1px,
+        transparent 1px,
+        transparent 5px
+      );
+      mix-blend-mode: screen;
+    }
+
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      border-bottom: 4px solid var(--blue);
+      font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #cfd3dd;
+    }
+
+    .hud strong {
+      color: var(--yellow);
+    }
+
+    .screen {
+      padding: clamp(22px, 5vw, 44px);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .dot {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 1000;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: transparent;
+      background-image: radial-gradient(
+        circle,
+        var(--yellow) 46%,
+        transparent 49%
+      );
+      background-size: 7px 7px;
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: drop-shadow(-5px 6px 0 var(--red));
+    }
+
+    .title {
+      font-size: clamp(36px, 8vw, 78px);
+      line-height: 0.96;
+      margin: 6px 0 26px;
+    }
+
+    .micro {
+      font: 900 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+
+    .sub {
+      max-width: 620px;
+      font-size: clamp(17px, 2.5vw, 22px);
+      line-height: 1.45;
+      margin: 0 0 28px;
+      color: #ece8db;
+    }
+
+    .frame {
+      border: 5px solid var(--blue);
+      border-radius: 26px;
+      padding: 18px;
+      background: #000;
+      color: #fff;
+    }
+
+    .role {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--yellow);
+      font: 900 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .objection {
+      font-size: clamp(24px, 5vw, 44px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      font-weight: 900;
+      margin: 0;
+      color: #fff;
+      -webkit-text-fill-color: #fff;
+    }
+
+    .progress {
+      display: flex;
+      gap: 8px;
+      margin: 18px 0 26px;
+    }
+
+    .progress i {
+      height: 12px;
+      flex: 1;
+      border: 3px solid var(--blue);
+      border-radius: 999px;
+      background: #000;
+    }
+
+    .progress i.on {
+      background: var(--yellow);
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 150px;
+      margin-top: 12px;
+      resize: vertical;
+      background: #050505;
+      color: #fff;
+      border: 4px solid var(--blue);
+      border-radius: 18px;
+      padding: 16px;
+      font: 500 17px/1.45 Arial, Helvetica, sans-serif;
+    }
+
+    textarea::placeholder {
+      color: #73798a;
+    }
+
+    textarea:focus-visible,
+    button:focus-visible {
+      outline: 4px solid var(--yellow);
+      outline-offset: 4px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button {
+      min-height: 52px;
+      padding: 12px 22px;
+      border: 5px solid var(--blue);
+      border-radius: 18px;
+      background: #000;
+      color: var(--yellow);
+      font: 1000 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 2px #000;
+    }
+
+    button.primary {
+      background: var(--yellow);
+      color: #000;
+      border-color: var(--blue);
+    }
+
+    .validation {
+      min-height: 20px;
+      color: #ff6f68;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .score {
+      font-size: clamp(76px, 18vw, 156px);
+      line-height: 0.8;
+      margin: 22px 0 18px;
+    }
+
+    .verdict {
+      font: 1000 clamp(20px, 4vw, 34px)/1 ui-monospace,
+        SFMono-Regular, Menlo, monospace;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      color: var(--yellow);
+    }
+
+    .metrics {
+      display: grid;
+      gap: 12px;
+      max-width: 680px;
+      margin: 28px 0;
+    }
+
+    .metric {
+      display: grid;
+      grid-template-columns: minmax(130px, 1fr) 2fr 52px;
+      gap: 12px;
+      align-items: center;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .meter {
+      height: 16px;
+      border: 3px solid var(--blue);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      background: var(--yellow);
+    }
+
+    .weak {
+      border: 5px solid var(--blue);
+      border-radius: 22px;
+      padding: 16px 18px;
+      margin: 26px 0;
+      max-width: 700px;
+      color: #fff;
+    }
+
+    .weak b {
+      display: block;
+      color: var(--yellow);
+      font: 900 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .reviewlist {
+      display: grid;
+      gap: 18px;
+    }
+
+    .review {
+      border: 5px solid var(--blue);
+      border-radius: 24px;
+      padding: 18px;
+      background: #000;
+      color: #fff;
+    }
+
+    .reviewhead {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--yellow);
+      font: 900 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .review h3 {
+      font-size: 21px;
+      line-height: 1.22;
+      margin: 0 0 16px;
+      color: #fff;
+    }
+
+    .label {
+      margin: 16px 0 6px;
+      color: var(--yellow);
+      font: 900 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .answer {
+      border-left: 4px solid var(--blue);
+      padding-left: 12px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      color: #eeeade;
+    }
+
+    .power {
+      border-left-color: var(--yellow);
+    }
+
+    .memory {
+      font-weight: 900;
+      color: var(--yellow);
+    }
+
+    .tiny {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted);
+      margin-top: 18px;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 10px;
+      }
+
+      .metric {
+        grid-template-columns: 1fr 48px;
+      }
+
+      .metric .meter {
+        grid-column: 1 / -1;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .cabinet {
+        border-width: 4px;
+        border-radius: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="game">
+    <div class="cabinet">
+
+      <div class="hud">
+        <span>OC-3000</span>
+        <span>LEVEL <strong>01</strong></span>
+        <span>HIGH <strong id="high">000</strong></span>
+      </div>
+
+      <section id="start" class="screen">
+        <div class="micro">Creative resistance simulator</div>
+
+        <div class="title dot">
+          Objection<br />
+          Crusher 3000
+        </div>
+
+        <p class="sub">
+          Five objections. One at a time. Answer exactly as you would in the
+          room. Your job is not to win the argument. Your job is to understand
+          what is really getting in the way.
+        </p>
+
+        <div class="actions">
+          <button id="startBtn" class="primary" type="button">
+            Start Game
+          </button>
+        </div>
+
+        <div class="tiny">
+          Repetition mode · objections change wording every rematch.
+        </div>
+      </section>
+
+      <section id="question" class="screen hidden">
+        <div id="round" class="micro">Round 1 / 5</div>
+
+        <div id="progress" class="progress"></div>
+
+        <div class="frame">
+          <div id="role" class="role"></div>
+          <h2 id="objection" class="objection"></h2>
+        </div>
+
+        <div class="micro" style="margin-top: 24px">
+          Player response
+        </div>
+
+        <textarea
+          id="input"
+          placeholder="Say what you would actually say..."
+        ></textarea>
+
+        <div id="validation" class="validation" aria-live="polite"></div>
+
+        <div class="actions">
+          <button id="submitBtn" class="primary" type="button">
+            Crush It
+          </button>
+        </div>
+      </section>
+
+      <section id="result" class="screen hidden">
+        <div class="micro">Game Over</div>
+
+        <div id="finalScore" class="score dot">000</div>
+
+        <div id="verdict" class="verdict">
+          Strong room.
+        </div>
+
+        <div id="metrics" class="metrics"></div>
+
+        <div id="weak" class="weak"></div>
+
+        <div class="actions">
+          <button id="reviewBtn" class="primary" type="button">
+            Review Tape
+          </button>
+
+          <button id="rematchBtn" type="button">
+            Rematch
+          </button>
+        </div>
+      </section>
+
+      <section id="reviewView" class="screen hidden">
+        <div class="micro">Post-game tape</div>
+
+        <div class="title dot" style="font-size: clamp(30px, 6vw, 52px)">
+          Review
+        </div>
+
+        <div id="reviewList" class="reviewlist"></div>
+
+        <div class="actions">
+          <button id="reviewRematch" class="primary" type="button">
+            Rematch
+          </button>
+
+          <button id="backBtn" type="button">
+            Back to Score
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        role: "CMO · PERSONAL ACCOUNTABILITY",
+        lines: [
+          "I like it. I just don't want to be the person explaining a pile-on to the CEO on Monday morning.",
+          "I get the argument about attention, but if this gets a bad reaction I'm the one who has to answer for it upstairs.",
+          "Maybe the odds of backlash are tiny. But if it happens, it lands on my desk, not yours.",
+          "I'm attracted to it. I'm just imagining the email from the CEO asking me what the hell we were thinking."
+        ],
+        keywords: [
+          "what specifically",
+          "what exactly",
+          "worried",
+          "react",
+          "ceo",
+          "pressure-test",
+          "accountable",
+          "business",
+          "manage"
+        ],
+        model:
+          "I completely understand — you're the one accountable for this internally. What specifically are you worried the CEO might react to? If we understand that, we can pressure-test it properly and make the smartest business decision together.",
+        memory:
+          "Find the feared consequence before you argue about risk.",
+        tip:
+          "Make the feared outcome specific before you start persuading."
+      },
+
+      {
+        role: "ACCOUNT DIRECTOR · PRE-EMPTIVE WATERING DOWN",
+        lines: [
+          "I've worked with these guys for years. If we show them this first, the meeting is going to go sideways.",
+          "Trust me, this is just further than they're going to go. Let's take the edge off before we put it in front of them.",
+          "They haven't said anything yet, but I know this client. This will make them nervous immediately.",
+          "I love the work. I just don't want us losing the room in the first ten minutes because we've pushed too far."
+        ],
+        keywords: [
+          "what specifically",
+          "what exactly",
+          "haven't",
+          "hasn't",
+          "predict",
+          "guess",
+          "know",
+          "objection",
+          "react",
+          "evidence"
+        ],
+        model:
+          "That's useful because you know them better than I do. What specifically are you worried they'll react to? If there's something we genuinely know will derail the meeting, let's deal with it. I just don't want us changing the work because of an objection we're guessing they might make.",
+        memory:
+          "Use account fear as intelligence, not instructions.",
+        tip:
+          "Separate what the team genuinely knows from what it is predicting."
+      },
+
+      {
+        role: "STRATEGY DIRECTOR · OFF STRATEGY",
+        lines: [
+          "It's a really good idea. I just can't see the proposition clearly enough in it.",
+          "I know everyone loves this one, but I think we've drifted away from what we actually agreed the strategy was.",
+          "My worry is the audience enjoys the execution and completely misses what we're trying to say.",
+          "It feels like we've got a great creative idea and we're now trying to bend the strategy around it."
+        ],
+        keywords: [
+          "proposition",
+          "strategy",
+          "dramatise",
+          "dramatize",
+          "literal",
+          "message",
+          "connection",
+          "where",
+          "specifically",
+          "audience"
+        ],
+        model:
+          "I agree it has to deliver the strategy. The proposition is X, and this idea dramatises X rather than simply repeating it. Show me specifically where you think the connection breaks. If there's a real gap, let's fix that without losing what makes the idea powerful.",
+        memory:
+          "Fix the strategic gap. Don't split the difference.",
+        tip:
+          "Ask them to identify the precise strategic break rather than accepting a vague accusation."
+      },
+
+      {
+        role: "EXECUTIVE PRODUCER · PRODUCTION TRADE-OFF",
+        lines: [
+          "I can get you that director, but you're giving up two shoot days and most of the contingency to do it. Still want them?",
+          "Your director is stronger creatively. Mine gives us another day, more post and a safety net. What matters more?",
+          "We can afford your first choice, but only if we squeeze everything else. I'm not convinced that makes the film better.",
+          "You're paying a serious premium for that name. Tell me what we're actually getting on screen for the extra money."
+        ],
+        keywords: [
+          "trade-off",
+          "tradeoff",
+          "outcome",
+          "finished",
+          "gain",
+          "lose",
+          "cost",
+          "shoot",
+          "contingency",
+          "right for the job",
+          "best ad"
+        ],
+        model:
+          "It doesn't have to be your director versus mine. It's about which choice gives us the strongest finished work. Let's spell out exactly what we gain and lose with each option — creatively, financially and in production — and make the trade consciously.",
+        memory:
+          "Protect the finished outcome, not the prestigious ingredient.",
+        tip:
+          "Turn the conversation into explicit creative and production trade-offs."
+      },
+
+      {
+        role: "BRAND MANAGER · SELLING UP",
+        lines: [
+          "I'll show it to my VP. I just don't want to walk in there saying this is the one I'm recommending.",
+          "I personally love it. I just don't want to be left holding the bag if my boss hates it.",
+          "I'm happy for this to go upstairs. I just need something more than my own opinion when they ask why we're backing it.",
+          "The work is exciting. What I don't have yet is a story I feel comfortable taking into my VP's office."
+        ],
+        keywords: [
+          "what would",
+          "what do you need",
+          "confident",
+          "recommend",
+          "business case",
+          "case",
+          "evidence",
+          "support",
+          "upstairs",
+          "together"
+        ],
+        model:
+          "I completely understand why you don't want to feel exposed on this. What would you need to feel confident recommending it? If we believe this is the strongest business solution, let's build the case together so you're not walking in with nothing but your personal opinion.",
+        memory:
+          "Give your champion ammunition, not courage.",
+        tip:
+          "Treat this as personal exposure and arm the champion with a business case."
+      }
+    ];
+
+    const views = {
+      start: document.querySelector("#start"),
+      question: document.querySelector("#question"),
+      result: document.querySelector("#result"),
+      review: document.querySelector("#reviewView")
+    };
+
+    const state = {
+      index: 0,
+      cycle: 0,
+      answers: [],
+      scores: [],
+      high: 0
+    };
+
+    const acknowledgementTerms = [
+      "understand",
+      "fair",
+      "get that",
+      "makes sense",
+      "helpful",
+      "agree",
+      "appreciate",
+      "completely",
+      "totally"
+    ];
+
+    const diagnosticTerms = [
+      "what specifically",
+      "what exactly",
+      "what makes",
+      "what would",
+      "what do you",
+      "which part",
+      "where",
+      "why",
+      "worried",
+      "concern",
+      "react"
+    ];
+
+    const moveTerms = [
+      "let's",
+      "can we",
+      "we can",
+      "work together",
+      "pressure-test",
+      "compare",
+      "build",
+      "figure out",
+      "find a way",
+      "solve"
+    ];
+
+    const collaborationTerms = [
+      "together",
+      " we ",
+      " us ",
+      " our ",
+      "help"
+    ];
+
+    const categoryNames = {
+      acknowledgement: "Acknowledgement",
+      diagnosis: "Diagnosis",
+      reframe: "Reframing",
+      move: "Next move",
+      naturalness: "Naturalness"
+    };
+
+    const weakSpotCopy = {
+      acknowledgement:
+        "You moved to the argument before showing you understood their reality.",
+
+      diagnosis:
+        "You started solving before finding the real fear, assumption or trade-off.",
+
+      reframe:
+        "You accepted the objection on its original terms instead of changing the frame.",
+
+      move:
+        "You understood the issue but did not create a clear next move.",
+
+      naturalness:
+        "Your answer needs to feel easier to say out loud in a real room."
+    };
+
+    function showView(name) {
+      Object.values(views).forEach(view =>
+        view.classList.add("hidden")
+      );
+
+      views[name].classList.remove("hidden");
+    }
+
+    function containsAny(text, phrases) {
+      return phrases.some(phrase => text.includes(phrase));
+    }
+
+    function countMatches(text, phrases) {
+      return phrases.reduce(
+        (total, phrase) =>
+          total + (text.includes(phrase) ? 1 : 0),
+        0
+      );
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>]/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;"
+      }[char]));
+    }
+
+    function currentObjection(question) {
+      return question.lines[
+        state.cycle % question.lines.length
+      ];
+    }
+
+    function scoreAnswer(text, question) {
+      const lower = ` ${text.toLowerCase()} `;
+
+      const wordCount = text
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean).length;
+
+      const acknowledgement =
+        containsAny(lower, acknowledgementTerms) ? 4 : 2;
+
+      let diagnosis =
+        (text.includes("?") ? 2 : 0) +
+        (containsAny(lower, diagnosticTerms) ? 2 : 0);
+
+      if (diagnosis === 0) diagnosis = 1;
+
+      const reframeMatches =
+        countMatches(lower, question.keywords);
+
+      const reframe =
+        reframeMatches >= 2
+          ? 4
+          : reframeMatches === 1
+          ? 3
+          : 1;
+
+      let move =
+        (containsAny(lower, moveTerms) ? 2 : 0) +
+        (containsAny(lower, collaborationTerms) ? 2 : 0);
+
+      if (move === 0) move = 1;
+
+      const naturalness =
+        wordCount >= 12 && wordCount <= 55
+          ? 4
+          : wordCount >= 8 && wordCount <= 70
+          ? 3
+          : wordCount >= 5 && wordCount <= 90
+          ? 2
+          : 1;
+
+      return {
+        acknowledgement,
+        diagnosis,
+        reframe,
+        move,
+        naturalness,
+        total:
+          acknowledgement +
+          diagnosis +
+          reframe +
+          move +
+          naturalness
+      };
+    }
+
+    function renderProgress() {
+      const progress = document.querySelector("#progress");
+
+      progress.innerHTML = "";
+
+      questions.forEach((_, index) => {
+        const segment = document.createElement("i");
+
+        if (index <= state.index) {
+          segment.className = "on";
+        }
+
+        progress.appendChild(segment);
+      });
+    }
+
+    function renderQuestion() {
+      const question = questions[state.index];
+
+      document.querySelector("#round").textContent =
+        `Round ${state.index + 1} / 5`;
+
+      document.querySelector("#role").textContent =
+        question.role;
+
+      document.querySelector("#objection").textContent =
+        currentObjection(question);
+
+      document.querySelector("#input").value = "";
+      document.querySelector("#validation").textContent = "";
+
+      renderProgress();
+      showView("question");
+
+      document.querySelector("#input").focus();
+    }
+
+    function startGame(rematch = false) {
+      state.index = 0;
+      state.answers = [];
+      state.scores = [];
+
+      if (rematch) {
+        state.cycle++;
+      }
+
+      renderQuestion();
+    }
+
+    function submitAnswer() {
+      const input = document.querySelector("#input");
+      const text = input.value.trim();
+
+      const wordCount = text
+        .split(/\s+/)
+        .filter(Boolean).length;
+
+      if (wordCount < 5) {
+        document.querySelector("#validation").textContent =
+          "Give me at least one real sentence.";
+        return;
+      }
+
+      state.answers.push(text);
+
+      state.scores.push(
+        scoreAnswer(
+          text,
+          questions[state.index]
+        )
+      );
+
+      if (state.index < questions.length - 1) {
+        state.index++;
+        renderQuestion();
+      } else {
+        renderResults();
+      }
+    }
+
+    function calculateTotals() {
+      const totals = {
+        acknowledgement: 0,
+        diagnosis: 0,
+        reframe: 0,
+        move: 0,
+        naturalness: 0,
+        total: 0
+      };
+
+      state.scores.forEach(score => {
+        totals.acknowledgement += score.acknowledgement;
+        totals.diagnosis += score.diagnosis;
+        totals.reframe += score.reframe;
+        totals.move += score.move;
+        totals.naturalness += score.naturalness;
+        totals.total += score.total;
+      });
+
+      return totals;
+    }
+
+    function renderResults() {
+      const totals = calculateTotals();
+
+      state.high = Math.max(
+        state.high,
+        totals.total
+      );
+
+      document.querySelector("#high").textContent =
+        String(state.high).padStart(3, "0");
+
+      document.querySelector("#finalScore").textContent =
+        String(totals.total).padStart(3, "0");
+
+      document.querySelector("#verdict").textContent =
+        totals.total >= 85
+          ? "High score."
+          : totals.total >= 70
+          ? "Strong room."
+          : totals.total >= 55
+          ? "Still standing."
+          : "Insert another coin.";
+
+      const metrics =
+        document.querySelector("#metrics");
+
+      metrics.innerHTML = "";
+
+      const categories = [
+        "acknowledgement",
+        "diagnosis",
+        "reframe",
+        "move",
+        "naturalness"
+      ];
+
+      categories.forEach(category => {
+        const row = document.createElement("div");
+        row.className = "metric";
+
+        row.innerHTML = `
+          <span>${categoryNames[category]}</span>
+
+          <div class="meter">
+            <span style="width:${totals[category] * 5}%"></span>
+          </div>
+
+          <strong>${totals[category]}/20</strong>
+        `;
+
+        metrics.appendChild(row);
+      });
+
+      const weakest =
+        [...categories].sort(
+          (a, b) => totals[a] - totals[b]
+        )[0];
+
+      document.querySelector("#weak").innerHTML = `
+        <b>
+          Weak spot · ${categoryNames[weakest]}
+        </b>
+
+        <span>
+          ${weakSpotCopy[weakest]}
+        </span>
+      `;
+
+      showView("result");
+    }
+
+    function workedText(score) {
+      const positives = [];
+
+      if (score.acknowledgement === 4) {
+        positives.push(
+          "You acknowledged their reality instead of fighting it."
+        );
+      }
+
+      if (score.diagnosis === 4) {
+        positives.push(
+          "You tried to uncover the real issue before solving."
+        );
+      }
+
+      if (score.reframe === 4) {
+        positives.push(
+          "You changed the frame rather than simply defending the work."
+        );
+      }
+
+      if (score.move === 4) {
+        positives.push(
+          "You created a collaborative next step."
+        );
+      }
+
+      if (score.naturalness === 4) {
+        positives.push(
+          "The response feels usable in a live room."
+        );
+      }
+
+      return (
+        positives.slice(0, 2).join(" ") ||
+        "You stayed in the conversation instead of becoming defensive."
+      );
+    }
+
+    function fixText(score, question) {
+      const categories = [
+        "acknowledgement",
+        "diagnosis",
+        "reframe",
+        "move",
+        "naturalness"
+      ];
+
+      const weakest =
+        [...categories].sort(
+          (a, b) => score[a] - score[b]
+        )[0];
+
+      if (weakest === "acknowledgement") {
+        return "Acknowledge their reality before making your case.";
+      }
+
+      if (weakest === "diagnosis") {
+        return "Ask one sharper question before you start solving.";
+      }
+
+      if (weakest === "reframe") {
+        return question.tip;
+      }
+
+      if (weakest === "move") {
+        return "Give the room one concrete next action.";
+      }
+
+      return "Tighten the answer so it feels natural to say aloud.";
+    }
+
+    function renderReview() {
+      const list =
+        document.querySelector("#reviewList");
+
+      list.innerHTML = "";
+
+      questions.forEach((question, index) => {
+        const score = state.scores[index];
+
+        const card =
+          document.createElement("article");
+
+        card.className = "review";
+
+        card.innerHTML = `
+          <div class="reviewhead">
+            <span>
+              Round ${index + 1} ·
+              ${escapeHtml(question.role)}
+            </span>
+
+            <span>
+              ${score.total}/20
+            </span>
+          </div>
+
+          <h3>
+            ${escapeHtml(
+              question.lines[
+                state.cycle %
+                  question.lines.length
+              ]
+            )}
+          </h3>
+
+          <div class="label">You said</div>
+
+          <div class="answer">
+            ${escapeHtml(state.answers[index])}
+          </div>
+
+          <div class="label">
+            What worked
+          </div>
+
+          <div>
+            ${escapeHtml(
+              workedText(score)
+            )}
+          </div>
+
+          <div class="label">
+            What to fix
+          </div>
+
+          <div>
+            ${escapeHtml(
+              fixText(score, question)
+            )}
+          </div>
+
+          <div class="label">
+            Power move
+          </div>
+
+          <div class="answer power">
+            ${escapeHtml(question.model)}
+          </div>
+
+          <div class="label">
+            Remember this
+          </div>
+
+          <div class="memory">
+            ${escapeHtml(question.memory)}
+          </div>
+        `;
+
+        list.appendChild(card);
+      });
+
+      showView("review");
+    }
+
+    document
+      .querySelector("#startBtn")
+      .addEventListener(
+        "click",
+        () => startGame(false)
+      );
+
+    document
+      .querySelector("#submitBtn")
+      .addEventListener(
+        "click",
+        submitAnswer
+      );
+
+    document
+      .querySelector("#reviewBtn")
+      .addEventListener(
+        "click",
+        renderReview
+      );
+
+    document
+      .querySelector("#rematchBtn")
+      .addEventListener(
+        "click",
+        () => startGame(true)
+      );
+
+    document
+      .querySelector("#reviewRematch")
+      .addEventListener(
+        "click",
+        () => startGame(true)
+      );
+
+    document
+      .querySelector("#backBtn")
+      .addEventListener(
+        "click",
+        () => showView("result")
+      );
+  </script>
+</body>
+</html>
