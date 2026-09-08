@@ -1,1179 +1,2470 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Objection Crusher 3000</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Objection Crusher 3000</title>
 
-  <style>
-    :root {
-      --black: #020202;
-      --blue: #1428ff;
-      --yellow: #ffe92f;
-      --red: #ff2b22;
-      --white: #ffffff;
-      --muted: #9ea4b2;
-    }
+<style>
+:root{
+  --black:#020202;
+  --blue:#1428ff;
+  --yellow:#ffe92f;
+  --red:#ff2b22;
+  --white:#fff;
+  --muted:#9ea4b2;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+*{box-sizing:border-box}
 
-    body {
-      margin: 0;
-      background: #050505;
-      color: var(--white);
-      font-family: Arial, Helvetica, sans-serif;
-      padding: 20px;
-    }
+body{
+  margin:0;
+  background:#050505;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+  padding:20px;
+}
 
-    .game {
-      width: min(900px, 100%);
-      margin: 0 auto;
-    }
+.game{
+  width:min(900px,100%);
+  margin:0 auto;
+}
 
-    .cabinet {
-      position: relative;
-      background: var(--black);
-      border: 5px solid var(--blue);
-      border-radius: 30px;
-      overflow: hidden;
-      color: #fff;
-    }
+.cab{
+  position:relative;
+  background:#000;
+  border:5px solid var(--blue);
+  border-radius:30px;
+  overflow:hidden;
+}
 
-    .cabinet::after {
-      content: "";
-      pointer-events: none;
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.025) 0,
-        rgba(255, 255, 255, 0.025) 1px,
-        transparent 1px,
-        transparent 5px
-      );
-      mix-blend-mode: screen;
-    }
+.cab:after{
+  content:'';
+  pointer-events:none;
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,.025) 0,
+    rgba(255,255,255,.025) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+}
 
-    .hud {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 12px 16px;
-      border-bottom: 4px solid var(--blue);
-      font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #cfd3dd;
-    }
+.hud{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:12px 16px;
+  border-bottom:4px solid var(--blue);
+  font:800 11px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#cfd3dd;
+}
 
-    .hud strong {
-      color: var(--yellow);
-    }
+.hud strong{color:var(--yellow)}
 
-    .screen {
-      padding: clamp(22px, 5vw, 44px);
-    }
+.screen{
+  padding:clamp(22px,5vw,44px);
+}
 
-    .hidden {
-      display: none !important;
-    }
+.hidden{display:none!important}
 
-    .dot {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-weight: 1000;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: transparent;
-      background-image: radial-gradient(
-        circle,
-        var(--yellow) 46%,
-        transparent 49%
-      );
-      background-size: 7px 7px;
-      -webkit-background-clip: text;
-      background-clip: text;
-      filter: drop-shadow(-5px 6px 0 var(--red));
-    }
+.dot{
+  font-family:ui-monospace,Menlo,monospace;
+  font-weight:1000;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:transparent;
+  background-image:radial-gradient(
+    circle,
+    var(--yellow) 46%,
+    transparent 49%
+  );
+  background-size:7px 7px;
+  -webkit-background-clip:text;
+  background-clip:text;
+  filter:drop-shadow(-5px 6px 0 var(--red));
+}
 
-    .title {
-      font-size: clamp(36px, 8vw, 78px);
-      line-height: 0.96;
-      margin: 6px 0 26px;
-    }
+.title{
+  font-size:clamp(36px,8vw,78px);
+  line-height:.96;
+  margin:6px 0 26px;
+}
 
-    .micro {
-      font: 900 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--yellow);
-    }
+.micro{
+  font:900 12px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--yellow);
+}
 
-    .sub {
-      max-width: 620px;
-      font-size: clamp(17px, 2.5vw, 22px);
-      line-height: 1.45;
-      margin: 0 0 28px;
-      color: #ece8db;
-    }
+.sub{
+  max-width:650px;
+  font-size:clamp(17px,2.5vw,22px);
+  line-height:1.45;
+  margin:0 0 28px;
+  color:#ece8db;
+}
 
-    .frame {
-      border: 5px solid var(--blue);
-      border-radius: 26px;
-      padding: 18px;
-      background: #000;
-      color: #fff;
-    }
+.frame{
+  border:5px solid var(--blue);
+  border-radius:26px;
+  padding:18px;
+  background:#000;
+  color:#fff;
+}
 
-    .role {
-      display: inline-block;
-      margin-bottom: 14px;
-      color: var(--yellow);
-      font: 900 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
+.role{
+  display:inline-block;
+  margin-bottom:14px;
+  color:var(--yellow);
+  font:900 11px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
 
-    .objection {
-      font-size: clamp(24px, 5vw, 44px);
-      line-height: 1.08;
-      letter-spacing: -0.035em;
-      font-weight: 900;
-      margin: 0;
-      color: #fff;
-      -webkit-text-fill-color: #fff;
-    }
+.objection{
+  font-size:clamp(24px,5vw,44px);
+  line-height:1.08;
+  letter-spacing:-.035em;
+  font-weight:900;
+  margin:0;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
 
-    .progress {
-      display: flex;
-      gap: 8px;
-      margin: 18px 0 26px;
-    }
+.progress{
+  display:flex;
+  gap:8px;
+  margin:18px 0 26px;
+}
 
-    .progress i {
-      height: 12px;
-      flex: 1;
-      border: 3px solid var(--blue);
-      border-radius: 999px;
-      background: #000;
-    }
+.progress i{
+  height:12px;
+  flex:1;
+  border:3px solid var(--blue);
+  border-radius:999px;
+  background:#000;
+}
 
-    .progress i.on {
-      background: var(--yellow);
-    }
+.progress i.on{
+  background:var(--yellow);
+}
 
-    textarea {
-      display: block;
-      width: 100%;
-      min-height: 150px;
-      margin-top: 12px;
-      resize: vertical;
-      background: #050505;
-      color: #fff;
-      border: 4px solid var(--blue);
-      border-radius: 18px;
-      padding: 16px;
-      font: 500 17px/1.45 Arial, Helvetica, sans-serif;
-    }
+textarea{
+  display:block;
+  width:100%;
+  min-height:150px;
+  margin-top:12px;
+  resize:vertical;
+  background:#050505;
+  color:#fff;
+  border:4px solid var(--blue);
+  border-radius:18px;
+  padding:16px;
+  font:500 17px/1.45 Arial,Helvetica,sans-serif;
+}
 
-    textarea::placeholder {
-      color: #73798a;
-    }
+textarea::placeholder{color:#73798a}
 
-    textarea:focus-visible,
-    button:focus-visible {
-      outline: 4px solid var(--yellow);
-      outline-offset: 4px;
-    }
+textarea:focus-visible,
+button:focus-visible{
+  outline:4px solid var(--yellow);
+  outline-offset:4px;
+}
 
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
 
-    button {
-      min-height: 52px;
-      padding: 12px 22px;
-      border: 5px solid var(--blue);
-      border-radius: 18px;
-      background: #000;
-      color: var(--yellow);
-      font: 1000 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: inset 0 0 0 2px #000;
-    }
+button{
+  min-height:52px;
+  padding:12px 22px;
+  border:5px solid var(--blue);
+  border-radius:18px;
+  background:#000;
+  color:var(--yellow);
+  font:1000 14px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
 
-    button.primary {
-      background: var(--yellow);
-      color: #000;
-      border-color: var(--blue);
-    }
+button.primary{
+  background:var(--yellow);
+  color:#000;
+}
 
-    .validation {
-      min-height: 20px;
-      color: #ff6f68;
-      margin-top: 8px;
-      font-size: 13px;
-    }
+.validation{
+  min-height:20px;
+  color:#ff6f68;
+  margin-top:8px;
+  font-size:13px;
+}
 
-    .score {
-      font-size: clamp(76px, 18vw, 156px);
-      line-height: 0.8;
-      margin: 22px 0 18px;
-    }
+.score{
+  font-size:clamp(76px,18vw,156px);
+  line-height:.8;
+  margin:22px 0 18px;
+}
 
-    .verdict {
-      font: 1000 clamp(20px, 4vw, 34px)/1 ui-monospace,
-        SFMono-Regular, Menlo, monospace;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-      color: var(--yellow);
-    }
+.verdict{
+  font:1000 clamp(20px,4vw,34px)/1 ui-monospace,Menlo,monospace;
+  text-transform:uppercase;
+  margin-bottom:28px;
+  color:var(--yellow);
+}
 
-    .metrics {
-      display: grid;
-      gap: 12px;
-      max-width: 680px;
-      margin: 28px 0;
-    }
+.metrics{
+  display:grid;
+  gap:12px;
+  max-width:680px;
+  margin:28px 0;
+}
 
-    .metric {
-      display: grid;
-      grid-template-columns: minmax(130px, 1fr) 2fr 52px;
-      gap: 12px;
-      align-items: center;
-      font-size: 14px;
-      color: #fff;
-    }
+.metric{
+  display:grid;
+  grid-template-columns:minmax(130px,1fr) 2fr 52px;
+  gap:12px;
+  align-items:center;
+  font-size:14px;
+}
 
-    .meter {
-      height: 16px;
-      border: 3px solid var(--blue);
-      border-radius: 999px;
-      overflow: hidden;
-      background: #000;
-    }
+.meter{
+  height:16px;
+  border:3px solid var(--blue);
+  border-radius:999px;
+  overflow:hidden;
+  background:#000;
+}
 
-    .meter span {
-      display: block;
-      height: 100%;
-      background: var(--yellow);
-    }
+.meter span{
+  display:block;
+  height:100%;
+  background:var(--yellow);
+}
 
-    .weak {
-      border: 5px solid var(--blue);
-      border-radius: 22px;
-      padding: 16px 18px;
-      margin: 26px 0;
-      max-width: 700px;
-      color: #fff;
-    }
+.weak{
+  border:5px solid var(--blue);
+  border-radius:22px;
+  padding:16px 18px;
+  margin:26px 0;
+  max-width:700px;
+}
 
-    .weak b {
-      display: block;
-      color: var(--yellow);
-      font: 900 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
+.weak b{
+  display:block;
+  color:var(--yellow);
+  font:900 11px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
 
-    .reviewlist {
-      display: grid;
-      gap: 18px;
-    }
+.reviewlist{
+  display:grid;
+  gap:18px;
+}
 
-    .review {
-      border: 5px solid var(--blue);
-      border-radius: 24px;
-      padding: 18px;
-      background: #000;
-      color: #fff;
-    }
+.review{
+  border:5px solid var(--blue);
+  border-radius:24px;
+  padding:18px;
+  background:#000;
+}
 
-    .reviewhead {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      color: var(--yellow);
-      font: 900 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
+.reviewhead{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+  color:var(--yellow);
+  font:900 11px/1.2 ui-monospace,Menlo,monospace;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
 
-    .review h3 {
-      font-size: 21px;
-      line-height: 1.22;
-      margin: 0 0 16px;
-      color: #fff;
-    }
+.review h3{
+  font-size:21px;
+  line-height:1.22;
+  margin:0 0 16px;
+  color:#fff!important;
+}
 
-    .label {
-      margin: 16px 0 6px;
-      color: var(--yellow);
-      font: 900 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
+.label{
+  margin:16px 0 6px;
+  color:var(--yellow);
+  font:900 10px/1 ui-monospace,Menlo,monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
 
-    .answer {
-      border-left: 4px solid var(--blue);
-      padding-left: 12px;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      color: #eeeade;
-    }
+.answer{
+  border-left:4px solid var(--blue);
+  padding-left:12px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  color:#eeeade;
+}
 
-    .power {
-      border-left-color: var(--yellow);
-    }
+.power{border-left-color:var(--yellow)}
 
-    .memory {
-      font-weight: 900;
-      color: var(--yellow);
-    }
+.memory{
+  font-weight:900;
+  color:var(--yellow);
+}
 
-    .tiny {
-      font-size: 12px;
-      line-height: 1.4;
-      color: var(--muted);
-      margin-top: 18px;
-    }
+.tiny{
+  font-size:12px;
+  line-height:1.45;
+  color:var(--muted);
+  margin-top:18px;
+}
 
-    @media (max-width: 520px) {
-      body {
-        padding: 10px;
-      }
+@media(max-width:520px){
+  body{padding:10px}
 
-      .metric {
-        grid-template-columns: 1fr 48px;
-      }
+  .metric{
+    grid-template-columns:1fr 48px;
+  }
 
-      .metric .meter {
-        grid-column: 1 / -1;
-      }
+  .metric .meter{
+    grid-column:1/-1;
+  }
 
-      button {
-        width: 100%;
-      }
+  button{
+    width:100%;
+  }
 
-      .cabinet {
-        border-width: 4px;
-        border-radius: 22px;
-      }
-    }
-  </style>
+  .cab{
+    border-width:4px;
+    border-radius:22px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <main class="game">
-    <div class="cabinet">
 
-      <div class="hud">
-        <span>OC-3000</span>
-        <span>LEVEL <strong>01</strong></span>
-        <span>HIGH <strong id="high">000</strong></span>
+<main class="game">
+
+<div class="cab">
+
+<div class="hud">
+  <span>OC-3000</span>
+  <span><strong>55</strong> SCENARIOS</span>
+  <span>HIGH <strong id="high">000</strong></span>
+</div>
+
+<section id="start" class="screen">
+
+  <div class="micro">
+    Creative resistance simulator
+  </div>
+
+  <div class="title dot">
+    Objection<br>Crusher 3000
+  </div>
+
+  <p class="sub">
+    Five objections. One at a time. Client. Account.
+    Strategy. Research. Production. Diagnose what is
+    really getting in the way, then respond exactly as
+    you would in the room.
+  </p>
+
+  <div class="actions">
+    <button id="startBtn" class="primary" type="button">
+      Start Game
+    </button>
+  </div>
+
+  <div class="tiny">
+    REMATCH = same five problems, different wording.
+    NEW 5 = fresh opponents.
+  </div>
+
+</section>
+
+
+<section id="question" class="screen hidden">
+
+  <div id="round" class="micro">
+    Round 1 / 5
+  </div>
+
+  <div id="progress" class="progress"></div>
+
+  <div class="frame">
+
+    <div id="role" class="role"></div>
+
+    <h2 id="objection" class="objection"></h2>
+
+  </div>
+
+  <div class="micro" style="margin-top:24px">
+    Player response
+  </div>
+
+  <textarea
+    id="input"
+    placeholder="Say what you would actually say..."
+  ></textarea>
+
+  <div
+    id="validation"
+    class="validation"
+    aria-live="polite">
+  </div>
+
+  <div class="actions">
+
+    <button
+      id="submitBtn"
+      class="primary"
+      type="button">
+      Crush It
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="result" class="screen hidden">
+
+  <div class="micro">
+    Game Over
+  </div>
+
+  <div id="finalScore" class="score dot">
+    000
+  </div>
+
+  <div id="verdict" class="verdict">
+    Strong room.
+  </div>
+
+  <div id="metrics" class="metrics"></div>
+
+  <div id="weak" class="weak"></div>
+
+  <div class="actions">
+
+    <button
+      id="reviewBtn"
+      class="primary"
+      type="button">
+      Review Tape
+    </button>
+
+    <button
+      id="rematchBtn"
+      type="button">
+      Rematch
+    </button>
+
+    <button
+      id="newBtn"
+      type="button">
+      New 5
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="reviewView" class="screen hidden">
+
+  <div class="micro">
+    Post-game tape
+  </div>
+
+  <div
+    class="title dot"
+    style="font-size:clamp(30px,6vw,52px)">
+    Review
+  </div>
+
+  <div id="reviewList" class="reviewlist"></div>
+
+  <div class="actions">
+
+    <button
+      id="reviewRematch"
+      class="primary"
+      type="button">
+      Rematch
+    </button>
+
+    <button
+      id="reviewNew"
+      type="button">
+      New 5
+    </button>
+
+    <button
+      id="backBtn"
+      type="button">
+      Back to Score
+    </button>
+
+  </div>
+
+</section>
+
+</div>
+</main>
+
+
+<script>
+
+const bank = [
+
+{
+id:1,
+side:"external",
+role:"CMO",
+lines:[
+"I like the ambition. I just think this is a bigger risk than we need to take.",
+"This feels like we're taking a risk for the sake of being interesting.",
+"I'm not sure the upside here justifies how exposed this makes us feel."
+],
+focus:[
+"risk","attention","noticed","impact","business","what specifically"
+],
+model:
+"I understand why it feels that way. What specifically feels risky to you? I want to compare that risk with the risk of spending the budget on work people barely notice, then make the smartest business decision from there.",
+memory:
+"Compare the right risks.",
+tip:
+"Don't defend boldness. Identify the feared consequence and put the risk of irrelevance beside it."
+},
+
+{
+id:2,
+side:"external",
+role:"CMO",
+lines:[
+"Why don't we just go with Route B? It says basically the same thing and feels much safer.",
+"The other route gets the message across without sticking our necks out. Why isn't that the sensible choice?",
+"If both routes communicate the proposition, why wouldn't I choose the one with less downside?"
+],
+focus:[
+"impact","attention","safer","trade-off","noticed","media"
+],
+model:
+"I understand why B feels safer. For me the difference is the impact we think each route will have. Before we choose, let's compare not only the downside of A but the downside of spending the same media money on something much easier to ignore.",
+memory:
+"Every option carries risk.",
+tip:
+"Turn safe versus risky into a comparison of likely business outcomes."
+},
+
+{
+id:3,
+side:"external",
+role:"CMO",
+lines:[
+"If this gets a bad reaction, I'm the one explaining it to the CEO. You're not.",
+"One bad headline lands on my desk, not yours.",
+"I'm imagining the CEO asking me what the hell we were thinking. That's what worries me."
+],
+focus:[
+"ceo","what specifically","worried","react","accountable","pressure-test"
+],
+model:
+"I completely understand — you're accountable for this internally. What specifically are you worried the CEO might react to? If we make that concrete, we can pressure-test it properly rather than asking you to take a blind personal bet.",
+memory:
+"Find the feared consequence.",
+tip:
+"Never tell someone their career risk is imaginary. Make it specific and manageable."
+},
+
+{
+id:4,
+side:"external",
+role:"CEO",
+lines:[
+"I understand why marketing likes it. How does this actually help us sell more product?",
+"Forget whether it's a good ad for a second. What's the business case?",
+"Tell me why this matters to the P&L rather than to the creative department."
+],
+focus:[
+"business","objective","sell","growth","measure","problem"
+],
+model:
+"That's the right question. The reason we're recommending it is not that it's more creative — it's that it solves the business problem by X. The creative idea is the mechanism. Let's judge it against the commercial objective and the measures we agreed at the start.",
+memory:
+"Creative is the mechanism, not the argument.",
+tip:
+"Translate the creative recommendation back into the actual business problem."
+},
+
+{
+id:5,
+side:"external",
+role:"CEO",
+lines:[
+"Getting attention is easy. How do I know this is the right kind of attention?",
+"I don't pay the agency to make noise. I pay you to build the brand.",
+"Plenty of stupid things get attention. Why is attention your argument?"
+],
+focus:[
+"brand","message","attention","objective","attribution","right kind"
+],
+model:
+"I agree — attention by itself isn't the goal. The question is whether this idea earns attention while landing the right message and building the right associations for the brand. That's the combination I'd like us to evaluate, not attention in isolation.",
+memory:
+"Attention must carry the strategy.",
+tip:
+"Don't argue that all attention is good. Connect attention to message, brand and objective."
+},
+
+{
+id:6,
+side:"external",
+role:"SENIOR CLIENT",
+lines:[
+"What happens when people start complaining about this on social?",
+"Have we actually thought through the backlash this could create?",
+"I can already see the angry comments. What do we do then?"
+],
+focus:[
+"what specifically","complain","backlash","likelihood","response","plan"
+],
+model:
+"We should absolutely think it through. What specifically do we think people would object to, and how likely is that response? Let's separate a vivid possibility from a probable business risk and make sure we have a sensible response plan.",
+memory:
+"Make vague backlash concrete.",
+tip:
+"Ask who will object, to what, and with what business consequence."
+},
+
+{
+id:7,
+side:"external",
+role:"SENIOR CLIENT",
+lines:[
+"We pushed the brand before and it went badly. I'm not doing that again.",
+"Last time we tried something edgy we got burned.",
+"We've got scar tissue here. Why should I believe this will be different?"
+],
+focus:[
+"what happened","last time","specifically","learn","different","cause"
+],
+model:
+"That history matters. Can we unpack what actually went wrong last time — the strategy, execution, timing, audience reaction or internal handling? I don't want to repeat a real mistake, but I also don't want one bad experience turning into a rule against distinctive work forever.",
+memory:
+"Learn from the scar, don't worship it.",
+tip:
+"Interrogate the previous failure before accepting it as proof that all ambitious work is dangerous."
+},
+
+{
+id:8,
+side:"external",
+role:"BRAND DIRECTOR",
+lines:[
+"It's good. I'm just not sure it feels like us.",
+"I can admire this as an ad and still not believe our brand would say it.",
+"Something about it feels off-brand to me."
+],
+focus:[
+"what specifically","brand","off-brand","unfamiliar","values","tone"
+],
+model:
+"That's important. What specifically feels unlike the brand — the tone, behaviour, message or execution? I want to separate something being genuinely off-brand from it simply being a new expression of the brand.",
+memory:
+"Unfamiliar isn't automatically off-brand.",
+tip:
+"Make them identify the brand principle being violated."
+},
+
+{
+id:9,
+side:"external",
+role:"BRAND DIRECTOR",
+lines:[
+"I think it's just too weird for our audience.",
+"I get it, but normal people are going to think this is bizarre.",
+"This is the kind of idea advertising people love more than consumers do."
+],
+focus:[
+"what part","audience","understand","weird","barrier","message"
+],
+model:
+"Which part do you think becomes a barrier for the audience? I'm comfortable with unusual if the message still lands. If there's a genuine comprehension problem, let's solve that without sanding off the thing that makes the idea noticeable.",
+memory:
+"Weird is only a problem when it blocks the message.",
+tip:
+"Separate unfamiliarity from incomprehension."
+},
+
+{
+id:10,
+side:"external",
+role:"BRAND DIRECTOR",
+lines:[
+"Can we make it a bit broader? I don't want to alienate anybody.",
+"I need this to appeal to everyone, not just one kind of person.",
+"Could we soften it so nobody feels excluded by the tone?"
+],
+focus:[
+"audience","target","alienate","everyone","relevant","specific"
+],
+model:
+"Who specifically are we worried about losing? If we try to make the work equally appealing to everyone, we can easily make it meaningful to no one. Let's protect the target audience first and understand whether there's a real exclusion risk beyond them.",
+memory:
+"Broad appeal can create broad indifference.",
+tip:
+"Ask whose reaction actually matters to the objective."
+},
+
+{
+id:11,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"I'm worried people will enjoy the ad and completely miss what we're trying to say.",
+"It's entertaining, but is the message clear enough?",
+"What if people remember the joke and not the point?"
+],
+focus:[
+"message","understand","comprehension","connection","clarity","specifically"
+],
+model:
+"That's the right thing to pressure-test. Where do you think the connection is getting lost? Let's make sure people understand the message without turning the execution into a literal explanation of the strategy.",
+memory:
+"Fix comprehension, not memorability.",
+tip:
+"Diagnose the exact clarity gap before making the work more literal."
+},
+
+{
+id:12,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"We've got four key product benefits. Why can't we get all four into the film?",
+"This needs to work harder. We're leaving important messages out.",
+"Can we find a way to land all the reasons to believe?"
+],
+focus:[
+"priority","one thing","remember","message","benefit","objective"
+],
+model:
+"We can physically put all four in. My concern is whether doing that makes any of them memorable. Which message absolutely has to land? I'd rather build the film around the most important thing and find smarter homes for the rest.",
+memory:
+"More messages can mean less communication.",
+tip:
+"Force prioritisation instead of accepting a checklist."
+},
+
+{
+id:13,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"Can we get the product in earlier and make the logo bigger?",
+"I don't think the branding is strong enough.",
+"Could we see the pack in the first five seconds? I'm worried about attribution."
+],
+focus:[
+"attribution","branding","cue","product","problem","alternative"
+],
+model:
+"If the concern is attribution, let's solve attribution. I just don't want to assume the answer is automatically an earlier pack shot or a bigger logo. What branded cues can we strengthen without damaging the reveal or the idea?",
+memory:
+"Solve the branding problem, not the requested execution.",
+tip:
+"Translate the amendment into its underlying objective."
+},
+
+{
+id:14,
+side:"external",
+role:"CLIENT",
+lines:[
+"I like the humour from A and the clarity from B. Can't we combine them?",
+"Could we take the best bits from both routes?",
+"What if we merge these? Then we don't have to choose."
+],
+focus:[
+"why","combine","trade-off","idea","clarity","strongest"
+],
+model:
+"We can explore it, but first I'd like to understand what problem the combination is solving. These ideas work because each has a clear organising thought. If we merge them, there's a real chance we dilute both rather than getting the best of both.",
+memory:
+"A hybrid isn't automatically the best of both.",
+tip:
+"Ask what the combination is meant to solve before creating a compromise route."
+},
+
+{
+id:15,
+side:"external",
+role:"CLIENT",
+lines:[
+"Maybe there's nothing technically wrong with it. I just don't like it.",
+"I can't give you a rational reason. It's just not for me.",
+"I understand the case. I still don't enjoy the idea."
+],
+focus:[
+"what","reaction","brand","audience","taste","specific"
+],
+model:
+"That's useful to know. Can you help me understand what you're reacting to — tone, subject matter, execution, or simply personal taste? I don't need you to pretend to like it, but I do want us to judge whether the concern belongs to you personally or to the brand and audience.",
+memory:
+"Taste is data, not automatically the decision.",
+tip:
+"Respect the reaction while locating whether it is personal or strategically relevant."
+},
+
+{
+id:16,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"I love it. There's absolutely no way my VP approves this.",
+"This is my favourite, but my boss will kill it in thirty seconds.",
+"I'd buy it personally. Leadership won't."
+],
+focus:[
+"what makes","vp","said","assume","evidence","upstairs"
+],
+model:
+"What makes you think they'll reject it? Is that based on something they've actually said or are we anticipating their reaction? If you believe this is the strongest work too, I'd rather help you make the case than weaken it before they've seen it.",
+memory:
+"Don't protect senior clients from unseen work.",
+tip:
+"Distinguish evidence about the boss from fear of the boss."
+},
+
+{
+id:17,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"I'll show it upstairs. I just don't want to say it's my recommendation.",
+"I don't want to be left holding the bag if my VP hates it.",
+"I'm happy for them to see it. I just don't want my name attached to the recommendation."
+],
+focus:[
+"what would","need","confident","recommend","case","support"
+],
+model:
+"I understand why you don't want to feel exposed. What would you need to feel confident recommending it? If we believe this is the strongest business solution, let's build the case together so you're not walking in armed with nothing but personal opinion.",
+memory:
+"Give your champion ammunition, not courage.",
+tip:
+"Reduce personal exposure rather than asking them to be brave."
+},
+
+{
+id:18,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"Can you give me a safer version so I've got something I know I can get through?",
+"I need a toned-down option in case leadership gets nervous.",
+"Could you just make one version that's easier for me to sell internally?"
+],
+focus:[
+"what concern","safer","upstairs","case","before","weaken"
+],
+model:
+"Before we create a safer version, what specific concern does it need to solve? If we're only anticipating resistance, I'd rather strengthen the sell around the best work than create a weaker answer to an objection nobody has made yet.",
+memory:
+"Don't manufacture a weaker option for a hypothetical objection.",
+tip:
+"Make them define what safer is supposed to solve."
+},
+
+{
+id:19,
+side:"external",
+role:"BRAND MANAGER",
+lines:[
+"The CMO doesn't need to be in the next meeting. I'll take the work to her afterwards.",
+"Let's agree the creative between us first and I'll socialize it with leadership later.",
+"We don't need to bother the CMO yet. I'll sell it upstairs once we're happy."
+],
+focus:[
+"cmo","strategy","approved","alignment","decision","upstairs"
+],
+model:
+"Before we develop much further, are we positive the CMO has seen and approved the strategic direction? If they're the final decision-maker, I'd rather move any disagreement to the strategy now than discover it after we've built the creative.",
+memory:
+"Move the collision point earlier.",
+tip:
+"Check strategic alignment with the real decision-maker before creative travels upstairs."
+},
+
+{
+id:20,
+side:"external",
+role:"SENIOR CLIENT",
+lines:[
+"You've got a strong opinion. What evidence do you have that this will actually work?",
+"Why should I take the agency's word for it?",
+"Show me something beyond creative enthusiasm that supports this recommendation."
+],
+focus:[
+"evidence","business","consumer","competitive","test","objective"
+],
+model:
+"You shouldn't take it on enthusiasm alone. Let's separate what we can prove now from what nobody can know before launch. We can show the strategic evidence, consumer behaviour, competitive context and why this execution is built to solve the objective.",
+memory:
+"Prove the foundation, not an unknowable future.",
+tip:
+"Offer evidence for the logic without pretending creativity can be guaranteed in advance."
+},
+
+{
+id:21,
+side:"external",
+role:"RESEARCH DIRECTOR",
+lines:[
+"I want all three concepts put through quantitative testing before we choose.",
+"We shouldn't be making this decision on instinct. Let's run the concepts through quant.",
+"I need numbers on these routes before we recommend anything."
+],
+focus:[
+"what measuring","criteria","comprehension","research","quant","before"
+],
+model:
+"I'm happy to use research if we agree what question it's answering. Before we test, can we define the decision criteria? On unfinished creative I'd put most weight on comprehension, message playback and attribution rather than asking a survey to predict cultural impact.",
+memory:
+"Research should inform the decision, not become the decision.",
+tip:
+"Set the purpose and success criteria before the results arrive."
+},
+
+{
+id:22,
+side:"external",
+role:"CLIENT",
+lines:[
+"The safer route scored significantly better. Surely the research has made the decision for us.",
+"Route B won the test. I don't understand why we're still debating it.",
+"The numbers prefer the conventional route. Isn't that the answer?"
+],
+focus:[
+"what scored","measure","comfort","comprehension","criteria","research"
+],
+model:
+"What exactly did it score better on? If it won on comprehension against criteria we agreed mattered, that's important. If it mainly won on comfort or stated liking, I don't think that automatically tells us which route will be more effective in market.",
+memory:
+"Interrogate what the score actually measures.",
+tip:
+"Never argue with a number until you understand the question behind the number."
+},
+
+{
+id:23,
+side:"external",
+role:"RESEARCH DIRECTOR",
+lines:[
+"People understood it, but they didn't particularly like it. That's a red flag.",
+"The comprehension is fine. The likability score worries me.",
+"Consumers got the message. They just preferred the other route."
+],
+focus:[
+"likability","comprehension","message","comfort","criteria","effectiveness"
+],
+model:
+"I'd separate those findings. If comprehension and attribution are strong, the core communication is working. The question is whether lower stated liking predicts failure here or whether we're simply seeing people react conservatively to something less familiar.",
+memory:
+"Likability and effectiveness are different questions.",
+tip:
+"Don't dismiss research; challenge whether the metric is relevant to the decision."
+},
+
+{
+id:24,
+side:"external",
+role:"CLIENT",
+lines:[
+"If people aren't responding to the animatic, why would we spend millions producing it?",
+"The rough film isn't testing. Why would the finished film suddenly work?",
+"The animatic feels flat in research. That makes me nervous about production."
+],
+focus:[
+"animatic","finished","craft","comprehension","test","what measuring"
+],
+model:
+"That's worth understanding. The animatic can reliably tell us some things — especially message comprehension — but it can't reproduce casting, performance, music, timing and craft. Let's be precise about what failed in the test before treating a rough proxy as the finished film.",
+memory:
+"Don't ask a rough stand-in to predict finished craft.",
+tip:
+"Separate what survives from script to screen from what only production can create."
+},
+
+{
+id:25,
+side:"external",
+role:"CLIENT",
+lines:[
+"Let's make the research changes and test it again.",
+"I'd feel better if we ran one more round after these amends.",
+"Why don't we optimize it, re-test, and then decide?"
+],
+focus:[
+"criteria","pass","decision","again","what question","goalposts"
+],
+model:
+"We can test again, but before we do I'd like us to agree what the next test needs to answer and what a pass looks like. Otherwise we risk changing the work, testing again and moving the goalposts indefinitely.",
+memory:
+"Set the finish line before running another lap.",
+tip:
+"Require a defined question and pass criteria before another round of testing."
+},
+
+{
+id:26,
+side:"external",
+role:"CFO / PROCUREMENT",
+lines:[
+"Why are we spending this much making an advert? Consumers don't know the production budget.",
+"I can save us a meaningful amount here. Why shouldn't I?",
+"Explain what the extra production spend actually buys the business."
+],
+focus:[
+"what buys","outcome","screen","craft","trade-off","business"
+],
+model:
+"They won't know the budget, but they will experience what the budget buys. Let's isolate the elements that materially improve the finished work and the ones that don't. If the extra spend doesn't create a better outcome, we shouldn't spend it.",
+memory:
+"Defend the outcome, not the budget.",
+tip:
+"Make every extra pound correspond to something meaningful on screen."
+},
+
+{
+id:27,
+side:"external",
+role:"CMO",
+lines:[
+"Nobody else in our category behaves like this. Doesn't that tell us something?",
+"Our competitors are all much more conventional. Why would we be the exception?",
+"There's a reason this category has certain rules."
+],
+focus:[
+"competitor","category","distinctive","sameness","attention","rule"
+],
+model:
+"It tells us the convention is real. The next question is whether that convention helps the brand or makes everybody look interchangeable. Let's understand why the rule exists, then decide whether following it gives us an advantage or simply makes us easier to ignore.",
+memory:
+"A category convention can be a warning or an opportunity.",
+tip:
+"Understand why the convention exists before treating sameness as safety."
+},
+
+{
+id:28,
+side:"external",
+role:"GLOBAL CLIENT",
+lines:[
+"This may work in the UK, but our markets are telling us it's too culturally specific.",
+"I can't see this translating globally.",
+"The local teams think the idea is too British to travel."
+],
+focus:[
+"which markets","what specifically","culture","adapt","idea","local"
+],
+model:
+"Which markets are raising the concern and what specifically isn't travelling — the core idea, the humour, a reference or the execution? If the idea is sound, I'd rather adapt the culturally specific expression than flatten the whole platform for every market.",
+memory:
+"Localise the expression before weakening the idea.",
+tip:
+"Find the specific cultural failure rather than accepting a vague global objection."
+},
+
+{
+id:29,
+side:"internal",
+role:"ACCOUNT DIRECTOR",
+lines:[
+"I know this client. They'll never buy it like this. Let's take the edge off before tomorrow.",
+"Trust me, this is further than they're going to go.",
+"If we show it as it is, we're going to lose the room."
+],
+focus:[
+"what specifically","know","predict","objection","haven't","react"
+],
+model:
+"Your experience with them is useful. What specifically do you think they'll react to? If we genuinely know something will derail the meeting, let's solve it. I just don't want us weakening the work for an objection we're predicting on their behalf.",
+memory:
+"Use account fear as intelligence, not instructions.",
+tip:
+"Turn the prediction into specific intelligence."
+},
+
+{
+id:30,
+side:"internal",
+role:"ACCOUNT DIRECTOR",
+lines:[
+"I'd rather get something decent approved than damage the relationship fighting for something extraordinary.",
+"The relationship matters more than winning this creative argument.",
+"We don't need to prove a point with this client."
+],
+focus:[
+"relationship","what damage","trust","disagree","work","priority"
+],
+model:
+"I agree the relationship matters more than our ego. What I'm trying to understand is whether respectful disagreement actually damages that relationship. If this change materially weakens the work, part of being a useful partner is explaining that clearly rather than quietly delivering something worse.",
+memory:
+"A good relationship can survive useful disagreement.",
+tip:
+"Separate genuine relationship risk from ordinary client discomfort."
+},
+
+{
+id:31,
+side:"internal",
+role:"ACCOUNT DIRECTOR",
+lines:[
+"This isn't the hill to die on. This client is too important to the agency.",
+"We could lose a lot more than one piece of work here.",
+"I'm not risking the account over an ad."
+],
+focus:[
+"what specifically","account","hill","critical","consequence","priority"
+],
+model:
+"I don't want to risk the account over creative pride either. Let's identify what we're actually risking and which part of the work is genuinely worth protecting. We can concede the notes that don't matter and be very deliberate about the one that does.",
+memory:
+"Choose the hill; don't fight the whole mountain.",
+tip:
+"Prioritise the element that truly makes or breaks the work."
+},
+
+{
+id:32,
+side:"internal",
+role:"ACCOUNT DIRECTOR",
+lines:[
+"Let's show the safer route first and ease them into the better one.",
+"I want to start with the one they'll be comfortable with.",
+"Let's warm the room up before we show the stretch route."
+],
+focus:[
+"recommendation","order","frame","strongest","lead","why"
+],
+model:
+"I'm open to the order if there's a strategic reason for it. My concern is that the first route sets the frame for everything that follows. If we believe one direction is clearly strongest, I'd rather make our recommendation unmistakable than accidentally anchor the room on safety.",
+memory:
+"Presentation order is part of the sell.",
+tip:
+"Don't let comfort dictate the sequence if it weakens the recommendation."
+},
+
+{
+id:33,
+side:"internal",
+role:"ACCOUNT DIRECTOR",
+lines:[
+"Let's keep that one in the appendix and only show it if the meeting goes well.",
+"We can have the brave route in reserve.",
+"I'd rather not put that direction in the main presentation."
+],
+focus:[
+"appendix","recommend","hide","show","strongest","why"
+],
+model:
+"If we don't believe in it, let's kill it. But if we think it's the strongest answer, hiding it almost guarantees it never gets a fair hearing. What specifically makes us uncomfortable putting our recommendation in the main presentation?",
+memory:
+"Don't hide the work you believe in.",
+tip:
+"Force a decision: recommend it or kill it; don't bury it."
+},
+
+{
+id:34,
+side:"internal",
+role:"ACCOUNT DIRECTOR",
+lines:[
+"They've given us clear feedback. At some point we need to stop fighting and make the changes.",
+"We can't debate every client note. Just take this one.",
+"They've told us what they want. We need to respond."
+],
+focus:[
+"concern","note","solve","change","what problem","alternative"
+],
+model:
+"I agree we need to respond. I just want to separate their concern from the exact amendment they've proposed. If the change improves the work, great. If it damages the idea, our job is to solve their concern a better way and explain why.",
+memory:
+"A client note contains a problem and a proposed solution. Separate them.",
+tip:
+"Don't ignore the note; diagnose the problem underneath it."
+},
+
+{
+id:35,
+side:"internal",
+role:"STRATEGY DIRECTOR",
+lines:[
+"It's the most interesting idea, but it's not as on-strategy as the other route.",
+"Creatively it's strong. Strategically I think the safer idea is cleaner.",
+"The other route just ladders back to the proposition more directly."
+],
+focus:[
+"where","strategy","proposition","dramatise","literal","gap"
+],
+model:
+"I agree it has to deliver the strategy. Show me specifically where you think this one breaks from it. My belief is that it dramatises the proposition rather than repeating it literally. If there's a real gap, let's fix the gap without losing the idea.",
+memory:
+"Fix the strategic gap. Don't split the difference.",
+tip:
+"Make the strategist identify the exact break."
+},
+
+{
+id:36,
+side:"internal",
+role:"STRATEGY DIRECTOR",
+lines:[
+"If I put the proposition next to this, I can't draw a straight enough line between them.",
+"I need to see the strategy more clearly in the execution.",
+"The proposition is getting lost in the creative leap."
+],
+focus:[
+"proposition","felt","repeat","literal","connection","where"
+],
+model:
+"The line matters, but I don't think the work needs to repeat the proposition literally. The strategy should be felt in the idea. Where specifically does the connection fail for you? If we can solve that without turning the ad into the brief, we should.",
+memory:
+"The strategy should be felt, not simply recited.",
+tip:
+"Distinguish strategic fidelity from literal expression."
+},
+
+{
+id:37,
+side:"internal",
+role:"STRATEGY DIRECTOR",
+lines:[
+"It feels like creative fell in love with an execution and reverse-engineered the strategy around it.",
+"I think we're using the strategy to justify an idea we already wanted to make.",
+"This feels execution-first rather than strategy-first."
+],
+focus:[
+"brief","derive","strategy","where","proposition","evidence"
+],
+model:
+"That's a fair challenge. Let's go back to the brief and trace the idea from the proposition together. If we can't make that case honestly, we've got a problem. If we can, then I don't want the fact that the execution is exciting to count against it.",
+memory:
+"Make the idea earn its strategic lineage.",
+tip:
+"Go back to the brief instead of arguing taste versus strategy."
+},
+
+{
+id:38,
+side:"internal",
+role:"STRATEGY DIRECTOR",
+lines:[
+"I understand the creative leap. I'm not convinced a normal person will make it.",
+"We're too close to this. I don't think consumers will connect those dots.",
+"The idea only works if the audience makes a pretty sophisticated leap."
+],
+focus:[
+"which leap","audience","understand","comprehension","test","connection"
+],
+model:
+"Which connection do you think they'll fail to make? If that's the risk, let's isolate it. We can test or strengthen comprehension without automatically making the whole idea more literal.",
+memory:
+"Test the leap, don't eliminate it by instinct.",
+tip:
+"Turn a vague audience assumption into a specific comprehension question."
+},
+
+{
+id:39,
+side:"internal",
+role:"STRATEGY DIRECTOR",
+lines:[
+"It's fun, but what's the actual human insight?",
+"I like the idea. I'm struggling to articulate the insight underneath it.",
+"What's the human truth that makes this more than a funny execution?"
+],
+focus:[
+"insight","brief","truth","problem","consumer","why"
+],
+model:
+"If the insight isn't clear, let's articulate what's actually powering the idea. But I don't want us inventing a generic human truth just to make the deck sound strategic. The real test is whether the idea solves the problem from a genuine consumer, product or cultural truth.",
+memory:
+"Don't reverse-engineer a fake insight for the deck.",
+tip:
+"Demand a real strategic source, not an ornamental insight sentence."
+},
+
+{
+id:40,
+side:"internal",
+role:"STRATEGY DIRECTOR",
+lines:[
+"The research says consumers want X. This idea is giving them Y.",
+"We're ignoring what people told us in the research.",
+"The consumer work points in the opposite direction to this execution."
+],
+focus:[
+"what research","actually","need","interpret","consumer","evidence"
+],
+model:
+"Let's go back to what the research actually established. Is X a genuine need we must solve, or an interpretation of what people said? If the idea conflicts with a real consumer requirement, we should fix it. If not, I don't want research language closing down the creative leap unnecessarily.",
+memory:
+"Separate the finding from the interpretation.",
+tip:
+"Interrogate exactly what the research proved."
+},
+
+{
+id:41,
+side:"internal",
+role:"EXECUTIVE PRODUCER",
+lines:[
+"These guys always deliver for us, they'll do us a deal, and we've got a great relationship. Why go elsewhere?",
+"I know you like the other company, but we know exactly what we'll get with these people.",
+"Why take production risk when we have a trusted company ready to go?"
+],
+focus:[
+"creative fit","outcome","criteria","relationship","right for job","trade-off"
+],
+model:
+"The relationship and reliability absolutely count. I just don't want familiarity becoming the creative criterion. Let's agree what this idea needs from production, then judge both companies against those requirements and the real cost and risk.",
+memory:
+"Convenience is a factor, not the creative criterion.",
+tip:
+"Define what the idea needs before choosing the familiar supplier."
+},
+
+{
+id:42,
+side:"internal",
+role:"EXECUTIVE PRODUCER",
+lines:[
+"Your director is £150k more expensive. Tell me what we're actually buying for that money.",
+"I can get you your first choice, but the premium is significant. Why are they worth it?",
+"What specifically will be better on screen if we spend the extra money on this director?"
+],
+focus:[
+"on screen","specific","cost","capability","outcome","premium"
+],
+model:
+"That's exactly the question we should answer. Let's identify the specific capabilities we're buying — performance, visual language, comedy, craft, whatever it is — and whether they materially improve the finished film. If I can't make that case, we shouldn't pay the premium.",
+memory:
+"Turn preference into a measurable creative trade-off.",
+tip:
+"Explain what the extra money buys in the finished work."
+},
+
+{
+id:43,
+side:"internal",
+role:"EXECUTIVE PRODUCER",
+lines:[
+"I can get your director, but we're losing two shoot days and most of the contingency. Still want them?",
+"Your choice means less time and almost no safety net.",
+"We can afford the director or protect the production. We can't do both."
+],
+focus:[
+"trade-off","finished","gain","lose","shoot","contingency"
+],
+model:
+"That's a meaningful trade. Let's compare the finished outcome we expect from each setup. If hiring the stronger director strips away the resources they need to make the film great, they may no longer be the strongest choice.",
+memory:
+"Choose the finished outcome, not the ingredient.",
+tip:
+"Judge the package, not the prestige of one component."
+},
+
+{
+id:44,
+side:"internal",
+role:"EXECUTIVE PRODUCER",
+lines:[
+"Wouldn't the film be better with the cheaper director and another day to shoot it?",
+"My option gives us more time, more post and more contingency. Doesn't that matter more?",
+"You're choosing the stronger director but the weaker production package."
+],
+focus:[
+"outcome","compare","director","days","post","package"
+],
+model:
+"It might be. Let's put ego aside and compare what each package gives the idea. If the extra day and post materially improve the film more than the director difference does, I want to know that. The goal is the best finished ad, not winning my original choice.",
+memory:
+"Protect the work, not your preference.",
+tip:
+"Be willing to discover the producer is right."
+},
+
+{
+id:45,
+side:"internal",
+role:"EXECUTIVE PRODUCER",
+lines:[
+"It's beautiful on paper, but we can't execute it properly for the money.",
+"We simply don't have the budget to make this version good enough.",
+"The idea isn't impossible. It's just impossible at the level of craft you're imagining."
+],
+focus:[
+"essential","protect","budget","execution","what part","alternative"
+],
+model:
+"Which parts are genuinely impossible at this budget, and which parts are just expensive in the current execution? Let's identify the one or two things that make the idea great and redesign everything else around protecting those.",
+memory:
+"Protect the essential creative mechanism.",
+tip:
+"Change the execution before abandoning the core idea."
+},
+
+{
+id:46,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"I know you don't like the change, but the client specifically asked us to do it.",
+"They asked for this. We can't just ignore the feedback.",
+"Whatever we think creatively, this was a direct client request."
+],
+focus:[
+"concern","asked","problem","solution","alternative","why"
+],
+model:
+"I'm not suggesting we ignore it. I want to understand the concern that's driving the request. If their proposed change solves it without hurting the work, let's do it. If it makes the work worse, I think we owe them a better solution to the same problem.",
+memory:
+"Solve the concern, not automatically the proposed fix.",
+tip:
+"Separate the request from the problem behind the request."
+},
+
+{
+id:47,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"We need to make these changes or they'll feel like we haven't listened.",
+"Even if we prefer the original, the client needs to see that we've taken the feedback onboard.",
+"We can't go back with essentially the same thing. They'll think we're ignoring them."
+],
+focus:[
+"listened","concern","solve","respond","alternative","show"
+],
+model:
+"I agree they need to feel heard. But listening doesn't have to mean executing every proposed amendment literally. Let's show exactly how we've responded to the concern and, where we disagree with the suggested fix, explain the stronger solution we're recommending instead.",
+memory:
+"Listening is not the same as obeying literally.",
+tip:
+"Demonstrate responsiveness while retaining creative judgement."
+},
+
+{
+id:48,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"Come on, it's only making the logo bigger. It's not going to ruin the work.",
+"It's a tiny change. Why are we making such a big deal about it?",
+"They only want the product five seconds earlier. Surely we can give them that."
+],
+focus:[
+"consequence","why","reveal","timing","alternative","small"
+],
+model:
+"On its own it sounds small. The reason I'm pushing is the consequence it has on X — the reveal, joke, tension or whatever is carrying the idea. Let's explain that consequence and see if we can solve their branding concern another way.",
+memory:
+"Small amendments can have large creative consequences.",
+tip:
+"Explain exactly what the note breaks rather than saying you dislike it."
+},
+
+{
+id:49,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"We've already pushed back on three things. We need to give them something.",
+"We can't fight every single note. Pick your battles.",
+"They've compromised too. We need to show some flexibility."
+],
+focus:[
+"which note","critical","concede","protect","priority","breaks"
+],
+model:
+"I agree — we shouldn't fight everything. Let's separate the notes we can happily take from the one that actually damages the idea. I'll give ground everywhere I can so we're very clear about the thing I think is genuinely worth protecting.",
+memory:
+"Concede the harmless. Protect the essential.",
+tip:
+"Prioritise one meaningful battle rather than treating every note equally."
+},
+
+{
+id:50,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"Why don't we just make their version as well and show both?",
+"Let's do what they asked and keep our preferred version in the deck too.",
+"We can avoid an argument by producing both versions."
+],
+focus:[
+"comparison","help","option","worse","why","decision"
+],
+model:
+"That can be useful if the comparison makes the consequence clear. My concern is creating a weaker option we already know we don't recommend and accidentally legitimising it. Let's decide whether showing both helps them make the decision or simply gives the bad version a path to approval.",
+memory:
+"Only make both versions when the comparison serves the decision.",
+tip:
+"Don't create a bad option merely to avoid a conversation."
+},
+
+{
+id:51,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"The client was very clear: they want the humour toned down.",
+"There's no ambiguity here. They asked us to make it less funny.",
+"They didn't ask us to explore. They told us exactly what they want changed."
+],
+focus:[
+"why","concern","humour","specific","clear","consequence"
+],
+model:
+"I hear that the instruction is clear. What I still want to understand is why they want the humour reduced. If we know the concern, we can decide whether toning it down is genuinely the right solution or whether there's another way to solve it without losing the engine of the idea.",
+memory:
+"A clear instruction can still contain the wrong solution.",
+tip:
+"Push once on the why, especially when the requested change damages the core idea."
+},
+
+{
+id:52,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"We need this back tonight. There's no time for another client conversation.",
+"The deadline is in three hours. Just make the amends and get it out.",
+"We don't have time to debate the notes. Production needs the deck tonight."
+],
+focus:[
+"time","call","critical","quick","one thing","alternative"
+],
+model:
+"I get the timing. Let's identify the one amendment that materially damages the work. If necessary, a ten-minute call on that one issue may be faster than rebuilding the work badly and reopening it tomorrow. Everything else we can move on immediately.",
+memory:
+"Use urgency to prioritise, not surrender judgement.",
+tip:
+"Protect only the critical issue when time is genuinely constrained."
+},
+
+{
+id:53,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"They're the client. If they want the headline changed, we change the headline.",
+"Ultimately they're paying us. It's their call.",
+"We advise, they decide. At some point we just have to do what they've asked."
+],
+focus:[
+"advise","decision","consequence","recommend","job","client"
+],
+model:
+"They absolutely make the final decision. Our job is to make sure it's an informed one. If we think the change weakens the work, I want us to explain the consequence, recommend the stronger solution and then respect the decision once they've made it with that information.",
+memory:
+"Client authority doesn't remove agency responsibility.",
+tip:
+"Push for an informed decision, not perpetual agency control."
+},
+
+{
+id:54,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"We made the argument in the meeting and they still rejected it. We have to accept the answer.",
+"We've already pushed on this once. They've said no.",
+"They heard our case and asked for the change anyway. What more do you want us to do?"
+],
+focus:[
+"final","breaks","alternative","accept","one more","consequence"
+],
+model:
+"If they heard the case and the decision is genuinely final, I'm not interested in endlessly relitigating it. I just want to make sure we know whether the requested change still leaves us with a good piece of work. If it doesn't, let's offer one viable alternative and then respect the decision.",
+memory:
+"Know when to stop fighting.",
+tip:
+"Creative leadership includes recognising when the decision has actually been made."
+},
+
+{
+id:55,
+side:"internal",
+role:"ACCOUNT MANAGER",
+lines:[
+"I agree the work will be worse, but this relationship matters more than one ad.",
+"Is protecting this execution really worth annoying the client?",
+"We need to think long-term here. I'd rather compromise the work than damage the relationship."
+],
+focus:[
+"relationship","trust","worth","critical","long-term","disagree"
+],
+model:
+"I agree the long-term relationship matters more than one execution. But part of a valuable long-term relationship is being willing to say when a change makes the work worse. Let's decide whether this is genuinely important enough to push on, and if it is, do it respectfully once rather than turning every note into a battle.",
+memory:
+"Protect trust and judgement at the same time.",
+tip:
+"Don't confuse a healthy disagreement with relationship damage."
+}
+
+];
+
+
+const views = {
+  start:document.querySelector("#start"),
+  question:document.querySelector("#question"),
+  result:document.querySelector("#result"),
+  review:document.querySelector("#reviewView")
+};
+
+const state = {
+  i:0,
+  cycle:0,
+  current:[],
+  answers:[],
+  scores:[],
+  high:0,
+  setNo:0
+};
+
+const ack = [
+  "understand",
+  "fair",
+  "get that",
+  "makes sense",
+  "helpful",
+  "agree",
+  "appreciate",
+  "hear you",
+  "completely",
+  "totally",
+  "i get"
+];
+
+const diag = [
+  "what specifically",
+  "what exactly",
+  "what makes",
+  "what would",
+  "what do you",
+  "which part",
+  "where",
+  "why",
+  "worried",
+  "concern",
+  "react",
+  "what problem",
+  "what happened"
+];
+
+const moves = [
+  "let's",
+  "can we",
+  "we can",
+  "work together",
+  "pressure-test",
+  "compare",
+  "build",
+  "figure out",
+  "find a way",
+  "solve",
+  "go back",
+  "look at"
+];
+
+const collab = [
+  "together",
+  " we ",
+  " us ",
+  " our ",
+  "help"
+];
+
+const names = {
+  ack:"Acknowledgement",
+  diag:"Diagnosis",
+  reframe:"Reframing",
+  move:"Next move",
+  natural:"Naturalness"
+};
+
+const weakCopy = {
+  ack:
+  "You moved to the argument before showing you understood their reality.",
+
+  diag:
+  "You started solving before finding the real fear, assumption or trade-off.",
+
+  reframe:
+  "You accepted the objection on its original terms instead of changing the frame.",
+
+  move:
+  "You understood the issue but did not create a clear next move.",
+
+  natural:
+  "Your answer needs to feel easier to say out loud in a real room."
+};
+
+
+function show(key){
+
+  Object.values(views).forEach(
+    view => view.classList.add("hidden")
+  );
+
+  views[key].classList.remove("hidden");
+}
+
+
+function has(text,array){
+
+  return array.some(
+    phrase => text.includes(phrase)
+  );
+}
+
+
+function count(text,array){
+
+  return array.reduce(
+    (total,phrase) =>
+      total + (text.includes(phrase) ? 1 : 0),
+    0
+  );
+}
+
+
+function esc(value){
+
+  return String(value).replace(
+    /[&<>]/g,
+    char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;"
+    }[char])
+  );
+}
+
+
+function shuffle(array){
+
+  const copy = [...array];
+
+  for(let i=copy.length-1;i>0;i--){
+
+    const j = Math.floor(
+      Math.random() * (i+1)
+    );
+
+    [copy[i],copy[j]] =
+      [copy[j],copy[i]];
+  }
+
+  return copy;
+}
+
+
+function pickNew(){
+
+  const old = new Set(
+    state.current.map(q => q.id)
+  );
+
+  let external = shuffle(
+    bank.filter(
+      q =>
+        q.side === "external" &&
+        !old.has(q.id)
+    )
+  );
+
+  let internal = shuffle(
+    bank.filter(
+      q =>
+        q.side === "internal" &&
+        !old.has(q.id)
+    )
+  );
+
+  if(external.length < 3){
+
+    external = shuffle(
+      bank.filter(
+        q => q.side === "external"
+      )
+    );
+  }
+
+  if(internal.length < 2){
+
+    internal = shuffle(
+      bank.filter(
+        q => q.side === "internal"
+      )
+    );
+  }
+
+  const mix =
+    state.setNo % 2 === 0
+      ? [
+          ...external.slice(0,3),
+          ...internal.slice(0,2)
+        ]
+      : [
+          ...external.slice(0,2),
+          ...internal.slice(0,3)
+        ];
+
+  state.current = shuffle(mix);
+
+  state.setNo++;
+
+  state.cycle =
+    Math.floor(Math.random()*3);
+}
+
+
+function line(question){
+
+  return question.lines[
+    (state.cycle + question.id) %
+    question.lines.length
+  ];
+}
+
+
+function score(text,question){
+
+  const lower =
+    " " + text.toLowerCase() + " ";
+
+  const wordCount =
+    text
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .length;
+
+
+  const acknowledgement =
+    has(lower,ack) ? 4 : 2;
+
+
+  let diagnosis =
+    (text.includes("?") ? 2 : 0) +
+    (has(lower,diag) ? 2 : 0);
+
+  if(!diagnosis){
+    diagnosis = 1;
+  }
+
+
+  const reframeMatches =
+    count(
+      lower,
+      question.focus
+    );
+
+  const reframe =
+    reframeMatches >= 2
+      ? 4
+      : reframeMatches === 1
+      ? 3
+      : 1;
+
+
+  let move =
+    (has(lower,moves) ? 2 : 0) +
+    (has(lower,collab) ? 2 : 0);
+
+  if(!move){
+    move = 1;
+  }
+
+
+  const natural =
+    wordCount >= 12 &&
+    wordCount <= 60
+
+      ? 4
+
+      : wordCount >= 8 &&
+        wordCount <= 75
+
+      ? 3
+
+      : wordCount >= 5 &&
+        wordCount <= 95
+
+      ? 2
+
+      : 1;
+
+
+  return {
+
+    ack:acknowledgement,
+    diag:diagnosis,
+    reframe,
+    move,
+    natural,
+
+    total:
+      acknowledgement +
+      diagnosis +
+      reframe +
+      move +
+      natural
+  };
+}
+
+
+function progress(){
+
+  const progress =
+    document.querySelector("#progress");
+
+  progress.innerHTML = "";
+
+  for(let x=0;x<5;x++){
+
+    const segment =
+      document.createElement("i");
+
+    if(x <= state.i){
+      segment.className = "on";
+    }
+
+    progress.appendChild(segment);
+  }
+}
+
+
+function renderQuestion(){
+
+  const question =
+    state.current[state.i];
+
+  document.querySelector("#round")
+    .textContent =
+      `Round ${state.i+1} / 5`;
+
+  document.querySelector("#role")
+    .textContent =
+      question.role;
+
+  document.querySelector("#objection")
+    .textContent =
+      line(question);
+
+  document.querySelector("#input")
+    .value = "";
+
+  document.querySelector("#validation")
+    .textContent = "";
+
+  progress();
+
+  show("question");
+
+  document.querySelector("#input")
+    .focus();
+}
+
+
+function begin(kind){
+
+  state.i = 0;
+  state.answers = [];
+  state.scores = [];
+
+  if(
+    kind === "new" ||
+    !state.current.length
+  ){
+
+    pickNew();
+
+  } else {
+
+    state.cycle++;
+  }
+
+  renderQuestion();
+}
+
+
+function submit(){
+
+  const input =
+    document.querySelector("#input");
+
+  const text =
+    input.value.trim();
+
+  const wordCount =
+    text
+      .split(/\s+/)
+      .filter(Boolean)
+      .length;
+
+  if(wordCount < 5){
+
+    document.querySelector("#validation")
+      .textContent =
+        "Give me at least one real sentence.";
+
+    return;
+  }
+
+  state.answers.push(text);
+
+  state.scores.push(
+    score(
+      text,
+      state.current[state.i]
+    )
+  );
+
+  if(state.i < 4){
+
+    state.i++;
+
+    renderQuestion();
+
+  } else {
+
+    renderResults();
+  }
+}
+
+
+function totals(){
+
+  const total = {
+
+    ack:0,
+    diag:0,
+    reframe:0,
+    move:0,
+    natural:0,
+    total:0
+  };
+
+  state.scores.forEach(score => {
+
+    total.ack += score.ack;
+    total.diag += score.diag;
+    total.reframe += score.reframe;
+    total.move += score.move;
+    total.natural += score.natural;
+    total.total += score.total;
+  });
+
+  return total;
+}
+
+
+function renderResults(){
+
+  const total =
+    totals();
+
+  state.high =
+    Math.max(
+      state.high,
+      total.total
+    );
+
+  document.querySelector("#high")
+    .textContent =
+      String(state.high)
+        .padStart(3,"0");
+
+  document.querySelector("#finalScore")
+    .textContent =
+      String(total.total)
+        .padStart(3,"0");
+
+
+  document.querySelector("#verdict")
+    .textContent =
+
+      total.total >= 85
+      ? "High score."
+
+      : total.total >= 70
+      ? "Strong room."
+
+      : total.total >= 55
+      ? "Still standing."
+
+      : "Insert another coin.";
+
+
+  const metrics =
+    document.querySelector("#metrics");
+
+  metrics.innerHTML = "";
+
+
+  [
+    "ack",
+    "diag",
+    "reframe",
+    "move",
+    "natural"
+  ].forEach(key => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "metric";
+
+    row.innerHTML = `
+
+      <span>
+        ${names[key]}
+      </span>
+
+      <div class="meter">
+
+        <span
+          style="width:${total[key]*5}%">
+        </span>
+
       </div>
 
-      <section id="start" class="screen">
-        <div class="micro">Creative resistance simulator</div>
+      <strong>
+        ${total[key]}/20
+      </strong>
+    `;
 
-        <div class="title dot">
-          Objection<br />
-          Crusher 3000
+    metrics.appendChild(row);
+  });
+
+
+  const weakest =
+    [
+      "ack",
+      "diag",
+      "reframe",
+      "move",
+      "natural"
+    ]
+    .sort(
+      (a,b) =>
+        total[a] - total[b]
+    )[0];
+
+
+  document.querySelector("#weak")
+    .innerHTML = `
+
+      <b>
+        Weak spot · ${names[weakest]}
+      </b>
+
+      <span>
+        ${weakCopy[weakest]}
+      </span>
+    `;
+
+
+  show("result");
+}
+
+
+function worked(score){
+
+  const positives = [];
+
+
+  if(score.ack === 4){
+
+    positives.push(
+      "You acknowledged their reality instead of fighting it."
+    );
+  }
+
+
+  if(score.diag === 4){
+
+    positives.push(
+      "You tried to uncover the real issue before solving."
+    );
+  }
+
+
+  if(score.reframe === 4){
+
+    positives.push(
+      "You changed the frame rather than simply defending the work."
+    );
+  }
+
+
+  if(score.move === 4){
+
+    positives.push(
+      "You created a collaborative next step."
+    );
+  }
+
+
+  if(score.natural === 4){
+
+    positives.push(
+      "The response feels usable in a live room."
+    );
+  }
+
+
+  return (
+
+    positives
+      .slice(0,2)
+      .join(" ")
+
+    ||
+
+    "You stayed in the conversation instead of becoming defensive."
+  );
+}
+
+
+function fix(score,question){
+
+  const weakest =
+
+    [
+      "ack",
+      "diag",
+      "reframe",
+      "move",
+      "natural"
+    ]
+
+    .sort(
+      (a,b) =>
+        score[a] - score[b]
+    )[0];
+
+
+  if(weakest === "ack"){
+
+    return (
+      "Acknowledge their reality before making your case."
+    );
+  }
+
+
+  if(weakest === "diag"){
+
+    return (
+      "Ask one sharper diagnostic question before proposing the solution."
+    );
+  }
+
+
+  if(weakest === "reframe"){
+
+    return question.tip;
+  }
+
+
+  if(weakest === "move"){
+
+    return (
+      "Give the room one concrete next action."
+    );
+  }
+
+
+  return (
+    "Tighten it into something you could say comfortably out loud."
+  );
+}
+
+
+function review(){
+
+  const list =
+    document.querySelector("#reviewList");
+
+  list.innerHTML = "";
+
+
+  state.current.forEach(
+    (question,index) => {
+
+      const score =
+        state.scores[index];
+
+      const card =
+        document.createElement("article");
+
+      card.className = "review";
+
+
+      card.innerHTML = `
+
+        <div class="reviewhead">
+
+          <span>
+            Round ${index+1} ·
+            ${esc(question.role)}
+          </span>
+
+          <span>
+            ${score.total}/20
+          </span>
+
         </div>
 
-        <p class="sub">
-          Five objections. One at a time. Answer exactly as you would in the
-          room. Your job is not to win the argument. Your job is to understand
-          what is really getting in the way.
-        </p>
 
-        <div class="actions">
-          <button id="startBtn" class="primary" type="button">
-            Start Game
-          </button>
+        <h3>
+          ${esc(line(question))}
+        </h3>
+
+
+        <div class="label">
+          You said
         </div>
 
-        <div class="tiny">
-          Repetition mode · objections change wording every rematch.
-        </div>
-      </section>
-
-      <section id="question" class="screen hidden">
-        <div id="round" class="micro">Round 1 / 5</div>
-
-        <div id="progress" class="progress"></div>
-
-        <div class="frame">
-          <div id="role" class="role"></div>
-          <h2 id="objection" class="objection"></h2>
+        <div class="answer">
+          ${esc(state.answers[index])}
         </div>
 
-        <div class="micro" style="margin-top: 24px">
-          Player response
+
+        <div class="label">
+          What worked
         </div>
 
-        <textarea
-          id="input"
-          placeholder="Say what you would actually say..."
-        ></textarea>
-
-        <div id="validation" class="validation" aria-live="polite"></div>
-
-        <div class="actions">
-          <button id="submitBtn" class="primary" type="button">
-            Crush It
-          </button>
-        </div>
-      </section>
-
-      <section id="result" class="screen hidden">
-        <div class="micro">Game Over</div>
-
-        <div id="finalScore" class="score dot">000</div>
-
-        <div id="verdict" class="verdict">
-          Strong room.
+        <div>
+          ${esc(worked(score))}
         </div>
 
-        <div id="metrics" class="metrics"></div>
 
-        <div id="weak" class="weak"></div>
-
-        <div class="actions">
-          <button id="reviewBtn" class="primary" type="button">
-            Review Tape
-          </button>
-
-          <button id="rematchBtn" type="button">
-            Rematch
-          </button>
-        </div>
-      </section>
-
-      <section id="reviewView" class="screen hidden">
-        <div class="micro">Post-game tape</div>
-
-        <div class="title dot" style="font-size: clamp(30px, 6vw, 52px)">
-          Review
+        <div class="label">
+          What to fix
         </div>
 
-        <div id="reviewList" class="reviewlist"></div>
-
-        <div class="actions">
-          <button id="reviewRematch" class="primary" type="button">
-            Rematch
-          </button>
-
-          <button id="backBtn" type="button">
-            Back to Score
-          </button>
+        <div>
+          ${esc(fix(score,question))}
         </div>
-      </section>
 
-    </div>
-  </main>
 
-  <script>
-    const questions = [
-      {
-        role: "CMO · PERSONAL ACCOUNTABILITY",
-        lines: [
-          "I like it. I just don't want to be the person explaining a pile-on to the CEO on Monday morning.",
-          "I get the argument about attention, but if this gets a bad reaction I'm the one who has to answer for it upstairs.",
-          "Maybe the odds of backlash are tiny. But if it happens, it lands on my desk, not yours.",
-          "I'm attracted to it. I'm just imagining the email from the CEO asking me what the hell we were thinking."
-        ],
-        keywords: [
-          "what specifically",
-          "what exactly",
-          "worried",
-          "react",
-          "ceo",
-          "pressure-test",
-          "accountable",
-          "business",
-          "manage"
-        ],
-        model:
-          "I completely understand — you're the one accountable for this internally. What specifically are you worried the CEO might react to? If we understand that, we can pressure-test it properly and make the smartest business decision together.",
-        memory:
-          "Find the feared consequence before you argue about risk.",
-        tip:
-          "Make the feared outcome specific before you start persuading."
-      },
+        <div class="label">
+          Power move
+        </div>
 
-      {
-        role: "ACCOUNT DIRECTOR · PRE-EMPTIVE WATERING DOWN",
-        lines: [
-          "I've worked with these guys for years. If we show them this first, the meeting is going to go sideways.",
-          "Trust me, this is just further than they're going to go. Let's take the edge off before we put it in front of them.",
-          "They haven't said anything yet, but I know this client. This will make them nervous immediately.",
-          "I love the work. I just don't want us losing the room in the first ten minutes because we've pushed too far."
-        ],
-        keywords: [
-          "what specifically",
-          "what exactly",
-          "haven't",
-          "hasn't",
-          "predict",
-          "guess",
-          "know",
-          "objection",
-          "react",
-          "evidence"
-        ],
-        model:
-          "That's useful because you know them better than I do. What specifically are you worried they'll react to? If there's something we genuinely know will derail the meeting, let's deal with it. I just don't want us changing the work because of an objection we're guessing they might make.",
-        memory:
-          "Use account fear as intelligence, not instructions.",
-        tip:
-          "Separate what the team genuinely knows from what it is predicting."
-      },
+        <div class="answer power">
+          ${esc(question.model)}
+        </div>
 
-      {
-        role: "STRATEGY DIRECTOR · OFF STRATEGY",
-        lines: [
-          "It's a really good idea. I just can't see the proposition clearly enough in it.",
-          "I know everyone loves this one, but I think we've drifted away from what we actually agreed the strategy was.",
-          "My worry is the audience enjoys the execution and completely misses what we're trying to say.",
-          "It feels like we've got a great creative idea and we're now trying to bend the strategy around it."
-        ],
-        keywords: [
-          "proposition",
-          "strategy",
-          "dramatise",
-          "dramatize",
-          "literal",
-          "message",
-          "connection",
-          "where",
-          "specifically",
-          "audience"
-        ],
-        model:
-          "I agree it has to deliver the strategy. The proposition is X, and this idea dramatises X rather than simply repeating it. Show me specifically where you think the connection breaks. If there's a real gap, let's fix that without losing what makes the idea powerful.",
-        memory:
-          "Fix the strategic gap. Don't split the difference.",
-        tip:
-          "Ask them to identify the precise strategic break rather than accepting a vague accusation."
-      },
 
-      {
-        role: "EXECUTIVE PRODUCER · PRODUCTION TRADE-OFF",
-        lines: [
-          "I can get you that director, but you're giving up two shoot days and most of the contingency to do it. Still want them?",
-          "Your director is stronger creatively. Mine gives us another day, more post and a safety net. What matters more?",
-          "We can afford your first choice, but only if we squeeze everything else. I'm not convinced that makes the film better.",
-          "You're paying a serious premium for that name. Tell me what we're actually getting on screen for the extra money."
-        ],
-        keywords: [
-          "trade-off",
-          "tradeoff",
-          "outcome",
-          "finished",
-          "gain",
-          "lose",
-          "cost",
-          "shoot",
-          "contingency",
-          "right for the job",
-          "best ad"
-        ],
-        model:
-          "It doesn't have to be your director versus mine. It's about which choice gives us the strongest finished work. Let's spell out exactly what we gain and lose with each option — creatively, financially and in production — and make the trade consciously.",
-        memory:
-          "Protect the finished outcome, not the prestigious ingredient.",
-        tip:
-          "Turn the conversation into explicit creative and production trade-offs."
-      },
+        <div class="label">
+          Remember this
+        </div>
 
-      {
-        role: "BRAND MANAGER · SELLING UP",
-        lines: [
-          "I'll show it to my VP. I just don't want to walk in there saying this is the one I'm recommending.",
-          "I personally love it. I just don't want to be left holding the bag if my boss hates it.",
-          "I'm happy for this to go upstairs. I just need something more than my own opinion when they ask why we're backing it.",
-          "The work is exciting. What I don't have yet is a story I feel comfortable taking into my VP's office."
-        ],
-        keywords: [
-          "what would",
-          "what do you need",
-          "confident",
-          "recommend",
-          "business case",
-          "case",
-          "evidence",
-          "support",
-          "upstairs",
-          "together"
-        ],
-        model:
-          "I completely understand why you don't want to feel exposed on this. What would you need to feel confident recommending it? If we believe this is the strongest business solution, let's build the case together so you're not walking in with nothing but your personal opinion.",
-        memory:
-          "Give your champion ammunition, not courage.",
-        tip:
-          "Treat this as personal exposure and arm the champion with a business case."
-      }
-    ];
-
-    const views = {
-      start: document.querySelector("#start"),
-      question: document.querySelector("#question"),
-      result: document.querySelector("#result"),
-      review: document.querySelector("#reviewView")
-    };
-
-    const state = {
-      index: 0,
-      cycle: 0,
-      answers: [],
-      scores: [],
-      high: 0
-    };
-
-    const acknowledgementTerms = [
-      "understand",
-      "fair",
-      "get that",
-      "makes sense",
-      "helpful",
-      "agree",
-      "appreciate",
-      "completely",
-      "totally"
-    ];
-
-    const diagnosticTerms = [
-      "what specifically",
-      "what exactly",
-      "what makes",
-      "what would",
-      "what do you",
-      "which part",
-      "where",
-      "why",
-      "worried",
-      "concern",
-      "react"
-    ];
-
-    const moveTerms = [
-      "let's",
-      "can we",
-      "we can",
-      "work together",
-      "pressure-test",
-      "compare",
-      "build",
-      "figure out",
-      "find a way",
-      "solve"
-    ];
-
-    const collaborationTerms = [
-      "together",
-      " we ",
-      " us ",
-      " our ",
-      "help"
-    ];
-
-    const categoryNames = {
-      acknowledgement: "Acknowledgement",
-      diagnosis: "Diagnosis",
-      reframe: "Reframing",
-      move: "Next move",
-      naturalness: "Naturalness"
-    };
-
-    const weakSpotCopy = {
-      acknowledgement:
-        "You moved to the argument before showing you understood their reality.",
-
-      diagnosis:
-        "You started solving before finding the real fear, assumption or trade-off.",
-
-      reframe:
-        "You accepted the objection on its original terms instead of changing the frame.",
-
-      move:
-        "You understood the issue but did not create a clear next move.",
-
-      naturalness:
-        "Your answer needs to feel easier to say out loud in a real room."
-    };
-
-    function showView(name) {
-      Object.values(views).forEach(view =>
-        view.classList.add("hidden")
-      );
-
-      views[name].classList.remove("hidden");
-    }
-
-    function containsAny(text, phrases) {
-      return phrases.some(phrase => text.includes(phrase));
-    }
-
-    function countMatches(text, phrases) {
-      return phrases.reduce(
-        (total, phrase) =>
-          total + (text.includes(phrase) ? 1 : 0),
-        0
-      );
-    }
-
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>]/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;"
-      }[char]));
-    }
-
-    function currentObjection(question) {
-      return question.lines[
-        state.cycle % question.lines.length
-      ];
-    }
-
-    function scoreAnswer(text, question) {
-      const lower = ` ${text.toLowerCase()} `;
-
-      const wordCount = text
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean).length;
-
-      const acknowledgement =
-        containsAny(lower, acknowledgementTerms) ? 4 : 2;
-
-      let diagnosis =
-        (text.includes("?") ? 2 : 0) +
-        (containsAny(lower, diagnosticTerms) ? 2 : 0);
-
-      if (diagnosis === 0) diagnosis = 1;
-
-      const reframeMatches =
-        countMatches(lower, question.keywords);
-
-      const reframe =
-        reframeMatches >= 2
-          ? 4
-          : reframeMatches === 1
-          ? 3
-          : 1;
-
-      let move =
-        (containsAny(lower, moveTerms) ? 2 : 0) +
-        (containsAny(lower, collaborationTerms) ? 2 : 0);
-
-      if (move === 0) move = 1;
-
-      const naturalness =
-        wordCount >= 12 && wordCount <= 55
-          ? 4
-          : wordCount >= 8 && wordCount <= 70
-          ? 3
-          : wordCount >= 5 && wordCount <= 90
-          ? 2
-          : 1;
-
-      return {
-        acknowledgement,
-        diagnosis,
-        reframe,
-        move,
-        naturalness,
-        total:
-          acknowledgement +
-          diagnosis +
-          reframe +
-          move +
-          naturalness
-      };
-    }
-
-    function renderProgress() {
-      const progress = document.querySelector("#progress");
-
-      progress.innerHTML = "";
-
-      questions.forEach((_, index) => {
-        const segment = document.createElement("i");
-
-        if (index <= state.index) {
-          segment.className = "on";
-        }
-
-        progress.appendChild(segment);
-      });
-    }
-
-    function renderQuestion() {
-      const question = questions[state.index];
-
-      document.querySelector("#round").textContent =
-        `Round ${state.index + 1} / 5`;
-
-      document.querySelector("#role").textContent =
-        question.role;
-
-      document.querySelector("#objection").textContent =
-        currentObjection(question);
-
-      document.querySelector("#input").value = "";
-      document.querySelector("#validation").textContent = "";
-
-      renderProgress();
-      showView("question");
-
-      document.querySelector("#input").focus();
-    }
-
-    function startGame(rematch = false) {
-      state.index = 0;
-      state.answers = [];
-      state.scores = [];
-
-      if (rematch) {
-        state.cycle++;
-      }
-
-      renderQuestion();
-    }
-
-    function submitAnswer() {
-      const input = document.querySelector("#input");
-      const text = input.value.trim();
-
-      const wordCount = text
-        .split(/\s+/)
-        .filter(Boolean).length;
-
-      if (wordCount < 5) {
-        document.querySelector("#validation").textContent =
-          "Give me at least one real sentence.";
-        return;
-      }
-
-      state.answers.push(text);
-
-      state.scores.push(
-        scoreAnswer(
-          text,
-          questions[state.index]
-        )
-      );
-
-      if (state.index < questions.length - 1) {
-        state.index++;
-        renderQuestion();
-      } else {
-        renderResults();
-      }
-    }
-
-    function calculateTotals() {
-      const totals = {
-        acknowledgement: 0,
-        diagnosis: 0,
-        reframe: 0,
-        move: 0,
-        naturalness: 0,
-        total: 0
-      };
-
-      state.scores.forEach(score => {
-        totals.acknowledgement += score.acknowledgement;
-        totals.diagnosis += score.diagnosis;
-        totals.reframe += score.reframe;
-        totals.move += score.move;
-        totals.naturalness += score.naturalness;
-        totals.total += score.total;
-      });
-
-      return totals;
-    }
-
-    function renderResults() {
-      const totals = calculateTotals();
-
-      state.high = Math.max(
-        state.high,
-        totals.total
-      );
-
-      document.querySelector("#high").textContent =
-        String(state.high).padStart(3, "0");
-
-      document.querySelector("#finalScore").textContent =
-        String(totals.total).padStart(3, "0");
-
-      document.querySelector("#verdict").textContent =
-        totals.total >= 85
-          ? "High score."
-          : totals.total >= 70
-          ? "Strong room."
-          : totals.total >= 55
-          ? "Still standing."
-          : "Insert another coin.";
-
-      const metrics =
-        document.querySelector("#metrics");
-
-      metrics.innerHTML = "";
-
-      const categories = [
-        "acknowledgement",
-        "diagnosis",
-        "reframe",
-        "move",
-        "naturalness"
-      ];
-
-      categories.forEach(category => {
-        const row = document.createElement("div");
-        row.className = "metric";
-
-        row.innerHTML = `
-          <span>${categoryNames[category]}</span>
-
-          <div class="meter">
-            <span style="width:${totals[category] * 5}%"></span>
-          </div>
-
-          <strong>${totals[category]}/20</strong>
-        `;
-
-        metrics.appendChild(row);
-      });
-
-      const weakest =
-        [...categories].sort(
-          (a, b) => totals[a] - totals[b]
-        )[0];
-
-      document.querySelector("#weak").innerHTML = `
-        <b>
-          Weak spot · ${categoryNames[weakest]}
-        </b>
-
-        <span>
-          ${weakSpotCopy[weakest]}
-        </span>
+        <div class="memory">
+          ${esc(question.memory)}
+        </div>
       `;
 
-      showView("result");
+
+      list.appendChild(card);
     }
+  );
 
-    function workedText(score) {
-      const positives = [];
 
-      if (score.acknowledgement === 4) {
-        positives.push(
-          "You acknowledged their reality instead of fighting it."
-        );
-      }
+  show("review");
+}
 
-      if (score.diagnosis === 4) {
-        positives.push(
-          "You tried to uncover the real issue before solving."
-        );
-      }
 
-      if (score.reframe === 4) {
-        positives.push(
-          "You changed the frame rather than simply defending the work."
-        );
-      }
+document.querySelector("#startBtn")
+  .addEventListener(
+    "click",
+    () => begin("new")
+  );
 
-      if (score.move === 4) {
-        positives.push(
-          "You created a collaborative next step."
-        );
-      }
 
-      if (score.naturalness === 4) {
-        positives.push(
-          "The response feels usable in a live room."
-        );
-      }
+document.querySelector("#submitBtn")
+  .addEventListener(
+    "click",
+    submit
+  );
 
-      return (
-        positives.slice(0, 2).join(" ") ||
-        "You stayed in the conversation instead of becoming defensive."
-      );
-    }
 
-    function fixText(score, question) {
-      const categories = [
-        "acknowledgement",
-        "diagnosis",
-        "reframe",
-        "move",
-        "naturalness"
-      ];
+document.querySelector("#reviewBtn")
+  .addEventListener(
+    "click",
+    review
+  );
 
-      const weakest =
-        [...categories].sort(
-          (a, b) => score[a] - score[b]
-        )[0];
 
-      if (weakest === "acknowledgement") {
-        return "Acknowledge their reality before making your case.";
-      }
+document.querySelector("#rematchBtn")
+  .addEventListener(
+    "click",
+    () => begin("rematch")
+  );
 
-      if (weakest === "diagnosis") {
-        return "Ask one sharper question before you start solving.";
-      }
 
-      if (weakest === "reframe") {
-        return question.tip;
-      }
+document.querySelector("#newBtn")
+  .addEventListener(
+    "click",
+    () => begin("new")
+  );
 
-      if (weakest === "move") {
-        return "Give the room one concrete next action.";
-      }
 
-      return "Tighten the answer so it feels natural to say aloud.";
-    }
+document.querySelector("#reviewRematch")
+  .addEventListener(
+    "click",
+    () => begin("rematch")
+  );
 
-    function renderReview() {
-      const list =
-        document.querySelector("#reviewList");
 
-      list.innerHTML = "";
+document.querySelector("#reviewNew")
+  .addEventListener(
+    "click",
+    () => begin("new")
+  );
 
-      questions.forEach((question, index) => {
-        const score = state.scores[index];
 
-        const card =
-          document.createElement("article");
+document.querySelector("#backBtn")
+  .addEventListener(
+    "click",
+    () => show("result")
+  );
 
-        card.className = "review";
+</script>
 
-        card.innerHTML = `
-          <div class="reviewhead">
-            <span>
-              Round ${index + 1} ·
-              ${escapeHtml(question.role)}
-            </span>
-
-            <span>
-              ${score.total}/20
-            </span>
-          </div>
-
-          <h3>
-            ${escapeHtml(
-              question.lines[
-                state.cycle %
-                  question.lines.length
-              ]
-            )}
-          </h3>
-
-          <div class="label">You said</div>
-
-          <div class="answer">
-            ${escapeHtml(state.answers[index])}
-          </div>
-
-          <div class="label">
-            What worked
-          </div>
-
-          <div>
-            ${escapeHtml(
-              workedText(score)
-            )}
-          </div>
-
-          <div class="label">
-            What to fix
-          </div>
-
-          <div>
-            ${escapeHtml(
-              fixText(score, question)
-            )}
-          </div>
-
-          <div class="label">
-            Power move
-          </div>
-
-          <div class="answer power">
-            ${escapeHtml(question.model)}
-          </div>
-
-          <div class="label">
-            Remember this
-          </div>
-
-          <div class="memory">
-            ${escapeHtml(question.memory)}
-          </div>
-        `;
-
-        list.appendChild(card);
-      });
-
-      showView("review");
-    }
-
-    document
-      .querySelector("#startBtn")
-      .addEventListener(
-        "click",
-        () => startGame(false)
-      );
-
-    document
-      .querySelector("#submitBtn")
-      .addEventListener(
-        "click",
-        submitAnswer
-      );
-
-    document
-      .querySelector("#reviewBtn")
-      .addEventListener(
-        "click",
-        renderReview
-      );
-
-    document
-      .querySelector("#rematchBtn")
-      .addEventListener(
-        "click",
-        () => startGame(true)
-      );
-
-    document
-      .querySelector("#reviewRematch")
-      .addEventListener(
-        "click",
-        () => startGame(true)
-      );
-
-    document
-      .querySelector("#backBtn")
-      .addEventListener(
-        "click",
-        () => showView("result")
-      );
-  </script>
 </body>
 </html>
